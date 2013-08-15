@@ -5,6 +5,7 @@
 
 #include "error.h"
 #include "window.h"
+#include "texture.h"
 #include "sdl_init.h"
 
 int main(int argc, char** argv) {
@@ -26,17 +27,18 @@ int main(int argc, char** argv) {
       return 1;
     }
 
-    SDL_Texture* tex = nullptr;
-    tex = SDL_CreateTextureFromSurface(ren, bmp);
+    rwc::Texture tex = win.CreateTexture(bmp);
     SDL_FreeSurface(bmp);
 
-    SDL_RenderClear(ren);
-    SDL_RenderCopy(ren, tex, NULL, NULL);
-    SDL_RenderPresent(ren);
+    win.Clear();
+
+    SDL_Rect dst = {100, 100, 200, 80};
+    tex.ApplyFull(0, 0);
+    tex.ApplyRects(NULL, &dst);
+
+    win.Render();
 
     SDL_Delay(4000);
-
-    SDL_DestroyTexture(tex);
     return 0;
   } catch (std::exception err) {
     std::cout << "ERROR: " << err.what() << "\n";

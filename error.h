@@ -11,7 +11,7 @@ namespace rwc {
 class FatalErr : std::exception {
  public:
   FatalErr() : msg_(SDL_GetError()) { };
-  FatalErr(std::string& msg) : msg_(msg) { };
+  FatalErr(std::string msg) : msg_(msg) { };
   virtual ~FatalErr() throw() { };
   virtual const char* what() const throw() {
     return msg_.c_str();

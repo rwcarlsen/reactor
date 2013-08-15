@@ -6,6 +6,7 @@
 
 #include "error.h"
 #include "math.h"
+#include "texture.h"
 
 namespace rwc {
 
@@ -25,6 +26,12 @@ class Window {
   SDL_Renderer* renderer() {
     return ren_;
   }
+
+  SDL_Rect viewport() {
+    SDL_Rect r;
+    SDL_RenderGetViewport(ren_, &r);
+    return r;
+  };
 
   std::string title() {
     return SDL_GetWindowTitle(win_);
@@ -76,6 +83,20 @@ class Window {
 
   void Restore() {
     return SDL_RestoreWindow(win_);
+  };
+
+  Texture CreateTexture(SDL_Surface* surf) {
+    return Texture(ren_, surf);
+  };
+
+  void Render() {
+    SDL_RenderPresent(ren_);
+  };
+
+  void Clear() {
+    if (SDL_RenderClear(ren_) != 0) {
+      throw FatalErr();
+    }
   };
 
  private:

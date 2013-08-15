@@ -5,6 +5,7 @@
 #include "SDL2/SDL.h"
 
 #include "error.h"
+#include "renderer.h"
 
 namespace rwc {
 
@@ -12,8 +13,21 @@ class Texture {
  public:
   Texture() : ren_(nullptr), tex_(nullptr) { };
 
-  Texture(SDL_Renderer* ren, SDL_Surface* surf) {
-    ren_ = ren;
+  Texture(Renderer ren, std::string bmp_file) {
+    ren_ = ren.raw();
+
+    SDL_Surface* bmp = SDL_LoadBMP(bmp_file.c_str());
+    if (bmp == nullptr) {
+      throw FatalErr();
+    }
+
+    tex_ = SDL_CreateTextureFromSurface(ren_, bmp);
+
+    SDL_FreeSurface(bmp);
+  };
+
+  Texture(Renderer ren, SDL_Surface* surf) {
+    ren_ = ren.raw();
     tex_ = SDL_CreateTextureFromSurface(ren_, surf);
   };
 

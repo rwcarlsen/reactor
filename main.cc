@@ -2,44 +2,46 @@
 #include <iostream>
 
 #include "SDL2/SDL.h"
+
 #include "error.h"
+#include "window.h"
+#include "sdl_init.h"
 
 int main(int argc, char** argv) {
-  if (SDL_Init(SDL_INIT_EVERYTHING) == -1) {
-    return FatalSDL();
+  try {
+    rwc::SDLinit init(SDL_INIT_EVERYTHING);
+
+    int w = 640;
+    int h = 480;
+    rwc::Window win(w, h, SDL_WINDOW_SHOWN);
+    win.set_title("Hello World");
+    win.Center();
+
+    SDL_Renderer* ren = win.renderer();
+
+    SDL_Surface* bmp = nullptr;
+    bmp = SDL_LoadBMP("hello.bmp");
+    if (bmp == nullptr) {
+      std::cout << SDL_GetError() << "\n";
+      return 1;
+    }
+
+    SDL_Texture* tex = nullptr;
+    tex = SDL_CreateTextureFromSurface(ren, bmp);
+    SDL_FreeSurface(bmp);
+
+    SDL_RenderClear(ren);
+    SDL_RenderCopy(ren, tex, NULL, NULL);
+    SDL_RenderPresent(ren);
+
+    SDL_Delay(4000);
+
+    SDL_DestroyTexture(tex);
+    return 0;
+  } catch (std::exception err) {
+    std::cout << "ERROR: " << err.what() << "\n";
+    return 1;
   }
-
-  int w = 640;
-  int h = 480;
-  SDL_Window* win = nullptr;
-  SDL_Renderer* ren = nullptr;
-  if (SDL_CreateWindowAndRenderer(w, h, SDL_WINDOW_SHOWN, &win, &ren) == -1) {
-    return FatalSDL();
-  }
-  SDL_SetWindowTitle(win, "Hello World");
-
-  SDL_Surface* bmp = nullptr;
-  bmp = SDL_LoadBMP("hello.bmp");
-  if (bmp == nullptr) {
-    return FatalSDL();
-  }
-
-  SDL_Texture* tex = nullptr;
-  tex = SDL_CreateTextureFromSurface(ren, bmp);
-  SDL_FreeSurface(bmp);
-
-  SDL_RenderClear(ren);
-  SDL_RenderCopy(ren, tex, NULL, NULL);
-  SDL_RenderPresent(ren);
-
-  SDL_Delay(4000);
-
-  SDL_DestroyTexture(tex);
-  SDL_DestroyRenderer(ren);
-  SDL_DestroyWindow(win);
-
-  SDL_Quit();
-  return 0;
 }
 
 

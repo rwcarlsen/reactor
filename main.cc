@@ -8,6 +8,9 @@
 #include "sdl/renderer.h"
 #include "sdl/texture.h"
 #include "sdl/sdl_init.h"
+#include "sdl/color.h"
+
+using sdl::Color;
 
 int main(int argc, char** argv) {
   try {
@@ -23,10 +26,13 @@ int main(int argc, char** argv) {
     sdl::Texture tex(ren, "hello.bmp");
 
     ren.Clear();
+
     SDL_Rect dst = {100, 100, 200, 80};
+    SDL_Rect dst2 = {200, 200, 200, 120};
+
     tex.ApplyFull(0, 0);
     tex.ApplyRects(NULL, &dst);
-
+    ren.FillRect(&dst2, Color::maroon());
     ren.Render();
 
     SDL_Delay(4000);

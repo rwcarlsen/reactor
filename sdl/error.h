@@ -6,7 +6,7 @@
 #include <iostream>
 #include <string>
 
-namespace rwc {
+namespace sdl {
 
 class FatalErr : std::exception {
  public:
@@ -21,6 +21,6 @@ class FatalErr : std::exception {
   std::string msg_;
 };
 
-} // namespace rwc
+} // namespace sdl
 
 #endif

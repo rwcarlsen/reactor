@@ -3,24 +3,24 @@
 
 #include "SDL2/SDL.h"
 
-#include "error.h"
-#include "window.h"
-#include "renderer.h"
-#include "texture.h"
-#include "sdl_init.h"
+#include "sdl/error.h"
+#include "sdl/window.h"
+#include "sdl/renderer.h"
+#include "sdl/texture.h"
+#include "sdl/sdl_init.h"
 
 int main(int argc, char** argv) {
   try {
-    rwc::SDLinit init(SDL_INIT_EVERYTHING);
+    sdl::SDLinit init(SDL_INIT_EVERYTHING);
 
     int w = 640;
     int h = 480;
-    rwc::Window win(w, h, SDL_WINDOW_SHOWN);
+    sdl::Window win(w, h, SDL_WINDOW_SHOWN);
     win.set_title("Hello World");
     win.Center();
 
-    rwc::Renderer ren = win.renderer();
-    rwc::Texture tex(ren, "hello.bmp");
+    sdl::Renderer ren = win.renderer();
+    sdl::Texture tex(ren, "hello.bmp");
 
     ren.Clear();
     SDL_Rect dst = {100, 100, 200, 80};

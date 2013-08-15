@@ -7,7 +7,7 @@
 #include "error.h"
 #include "renderer.h"
 
-namespace rwc {
+namespace sdl {
 
 class Texture {
  public:
@@ -56,6 +56,6 @@ class Texture {
   SDL_Texture* tex_;
 };
 
-} // namespace rwc
+} // namespace sdl
 
 #endif

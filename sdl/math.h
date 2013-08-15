@@ -2,7 +2,7 @@
 #ifndef MATH_H_
 #define MATH_H_
 
-namespace rwc {
+namespace sdl {
 
 class Position {
  public:
@@ -20,7 +20,7 @@ class Size {
   int h;
 };
 
-} // namespace rwc
+} // namespace sdl
 
 #endif
 

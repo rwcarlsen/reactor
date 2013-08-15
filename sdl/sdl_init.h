@@ -2,7 +2,7 @@
 #ifndef SDL_INIT_H_
 #define SDL_INIT_H_
 
-namespace rwc {
+namespace sdl {
 
 class SDLinit {
  public:
@@ -17,6 +17,6 @@ class SDLinit {
   };
 };
 
-} // namespace rwc
+} // namespace sdl
 
 #endif

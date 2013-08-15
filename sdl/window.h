@@ -9,7 +9,7 @@
 #include "renderer.h"
 #include "texture.h"
 
-namespace rwc {
+namespace sdl {
 
 class Window {
  public:
@@ -85,6 +85,6 @@ class Window {
   SDL_Renderer* ren_;
 };
 
-} // namespace rwc
+} // namespace sdl
 
 #endif

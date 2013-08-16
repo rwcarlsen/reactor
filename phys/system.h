@@ -27,7 +27,7 @@ class System {
 
       Rxn rxn = SelectRxn(*it, m, deltat);
       if (rxn == SCATTER) {
-        it->set_v(m->scat_v(it->v()));
+        it->set_v(m->scat_v(it->v(), it->speed()));
         it->Move(deltat);
         ++it;
       } else if (rxn == ABSORB) {
@@ -86,7 +86,7 @@ class System {
   Geometry geom_;
   Neutron::Pop neutrons_;
 
-  std::mt19937_64 rand_gen_;
+  std::ranlux48_base rand_gen_;
   std::uniform_real_distribution<> uniform01_;
   std::poisson_distribution<> poisson1_;
 };

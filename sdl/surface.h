@@ -43,6 +43,12 @@ class Surface {
     }
   };
 
+  void FillRectPix(const SDL_Rect* rect, uint32_t pix) {
+    if (SDL_FillRect(surf_, rect, pix) != 0) {
+      throw FatalErr();
+    }
+  };
+
  private:
   SDL_Surface* surf_;
   SDL_PixelFormat* fmt_;

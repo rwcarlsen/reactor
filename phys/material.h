@@ -21,7 +21,7 @@ class Material {
     return 0;
   };
 
-  virtual Neutron::V scat_v(Neutron::V v) {
+  virtual Neutron::V scat_v(Neutron::V v, double speed) {
     return v;
   };
 

@@ -33,8 +33,7 @@ class BasicMaterial : public Material {
     return p_scatter;
   };
 
-  virtual Neutron::V scat_v(Neutron::V v) {
-    double speed = std::pow(v.x * v.x + v.y * v.y, 0.5);
+  virtual Neutron::V scat_v(Neutron::V v, double speed) {
     double theta = uniform_(rand_gen_);
     double vy = speed * std::sin(theta) * scat_frac;
     double vx = speed * std::cos(theta) * scat_frac;
@@ -52,7 +51,7 @@ class BasicMaterial : public Material {
   int yield;
 
  private:
-  std::mt19937_64 rand_gen_;
+  std::ranlux48_base rand_gen_;
   std::uniform_real_distribution<> uniform_;
 };
 

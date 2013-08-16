@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
     // create neutron system
     phys::System sys(geom);
     phys::Neutron::Pop ns;
-    for (int i = 0; i < 30000; ++i) {
+    for (int i = 0; i < 100000; ++i) {
       ns.push_back(phys::Neutron(320, 240, .5, .5));
     }
     sys.AddNeutrons(ns);
@@ -50,6 +50,16 @@ int main(int argc, char** argv) {
 
     sdl::Timer timer;
     timer.set_framerate(fps);
+
+    // get red pixel fmt
+    SDL_DisplayMode curr;
+    if (SDL_GetCurrentDisplayMode(0, &curr) != 0) {
+      throw sdl::FatalErr();
+    }
+    SDL_PixelFormat* fmt = SDL_AllocFormat(curr.format);
+    Color red = Color::red();
+    uint32_t redpix = SDL_MapRGB(fmt, red.r, red.g, red.b);
+    SDL_FreeFormat(fmt);
 
     // run simulation
     SDL_Event ev;
@@ -68,7 +78,7 @@ int main(int argc, char** argv) {
       const phys::Neutron::Pop ns = sys.neutrons();
       for (auto it = ns.begin(); it != ns.end(); ++it) {
         SDL_Rect dst = {it->x(), it->y(), neut_len, neut_len};
-        surf.FillRect(&dst, Color::red());
+        surf.FillRectPix(&dst, redpix);
       }
 
       ren.Clear();

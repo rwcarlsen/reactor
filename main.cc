@@ -10,6 +10,8 @@
 #include "sdl/sdl_init.h"
 #include "sdl/color.h"
 
+#include "phys/system.h"
+
 using sdl::Color;
 
 int main(int argc, char** argv) {

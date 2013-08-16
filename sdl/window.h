@@ -36,20 +36,16 @@ class Window {
     SDL_SetWindowTitle(win_, s.c_str());
   };
 
-  Position pos() {
-    Position p;
-    SDL_GetWindowPosition(win_, &p.x, &p.y);
-    return p;
+  void pos(int* x, int* y) {
+    SDL_GetWindowPosition(win_, x, y);
   };
 
   void set_pos(int x, int y) {
     SDL_SetWindowPosition(win_, x, y);
   };
 
-  Size size() {
-    Size s;
-    SDL_GetWindowPosition(win_, &s.w, &s.h);
-    return s;
+  void size(int* w, int* h) {
+    SDL_GetWindowPosition(win_, w, h);
   };
 
   void set_size(int w, int h) {

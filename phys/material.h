@@ -4,15 +4,33 @@
 
 namespace phys {
 
+// all probabilities given per unit length
 class Material {
  public:
-   double absorb_prob(double speed) = 0;
-   double fiss_prob(double speed) = 0;
-   double fiss_yield() = 0;
-   double scatter_prob(double speed) = 0;
-   double scatter_vx(double x, double y, double vx) = 0;
-   double scatter_vy(double x, double y, double vy) = 0;
-}
+   virtual double absorb_prob(double speed) {
+     return 0;
+   };
+
+   virtual double fiss_prob(double speed) {
+     return 0;
+   };
+
+   virtual double scatter_prob(double speed) {
+     return 0;
+   };
+
+   virtual double new_vx(double vx) {
+     return vx;
+   };
+
+   virtual double new_vy(double vy) {
+     return vy;
+   };
+
+   virtual int fiss_yield() {
+     return 0;
+   };
+};
 
 } // namespace phys
 

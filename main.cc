@@ -37,29 +37,24 @@ int main(int argc, char** argv) {
     // create neutron system
     phys::System sys(geom);
     phys::Neutron::Pop ns;
-    for (int i = 0; i < 100000; ++i) {
+    for (int i = 0; i < 210000; ++i) {
       ns.push_back(phys::Neutron(320, 240, .5, .5));
     }
     sys.AddNeutrons(ns);
 
     // set params
-    double fps = 38;
+    double fps = 35;
     double pix_per_sec = 30;
     double deltat = pix_per_sec / fps;
-    int neut_len = 2;
+    int neut_len = 1;
 
     sdl::Timer timer;
     timer.set_framerate(fps);
 
-    // get red pixel fmt
-    SDL_DisplayMode curr;
-    if (SDL_GetCurrentDisplayMode(0, &curr) != 0) {
-      throw sdl::FatalErr();
-    }
-    SDL_PixelFormat* fmt = SDL_AllocFormat(curr.format);
-    Color red = Color::red();
-    uint32_t redpix = SDL_MapRGB(fmt, red.r, red.g, red.b);
-    SDL_FreeFormat(fmt);
+    // get pixel fmts - for performance
+    uint32_t redpix = Color::red().pix();
+    uint32_t blkpix = Color::black().pix();
+    sdl::Surface surf(w, h);
 
     // run simulation
     SDL_Event ev;
@@ -74,13 +69,15 @@ int main(int argc, char** argv) {
 
       sys.Tick(deltat);
 
-      sdl::Surface surf(w, h);
+      // redraw neutrons
+      surf.FillRectPix(NULL, blkpix); // wipe surface
       const phys::Neutron::Pop ns = sys.neutrons();
       for (auto it = ns.begin(); it != ns.end(); ++it) {
         SDL_Rect dst = {it->x(), it->y(), neut_len, neut_len};
         surf.FillRectPix(&dst, redpix);
       }
 
+      // render everything
       ren.Clear();
       sdl::Texture tex(ren, surf);
       tex.ApplyFull(0, 0);

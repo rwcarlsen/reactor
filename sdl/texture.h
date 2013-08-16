@@ -6,6 +6,7 @@
 
 #include "error.h"
 #include "renderer.h"
+#include "sdl/surface.h"
 
 namespace sdl {
 
@@ -13,7 +14,7 @@ class Texture {
  public:
   Texture() : ren_(nullptr), tex_(nullptr) { };
 
-  Texture(Renderer ren, std::string bmp_file) {
+  Texture(const Renderer& ren, std::string bmp_file) {
     ren_ = ren.raw();
 
     SDL_Surface* bmp = SDL_LoadBMP(bmp_file.c_str());
@@ -26,9 +27,9 @@ class Texture {
     SDL_FreeSurface(bmp);
   };
 
-  Texture(Renderer ren, SDL_Surface* surf) {
+  Texture(const Renderer& ren, const Surface& surf) {
     ren_ = ren.raw();
-    tex_ = SDL_CreateTextureFromSurface(ren_, surf);
+    tex_ = SDL_CreateTextureFromSurface(ren_, surf.raw());
   };
 
   ~Texture() {

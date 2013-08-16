@@ -11,39 +11,33 @@ namespace phys {
 
 class Geometry {
  public:
-  typedef struct{int x, y, w, h;} Rect;
-
-  Geometry() : geom_(10000000) { };
+  typedef struct {
+    int x, y, w, h;
+  } Rect;
 
   void AddMaterial(Material* m, Rect bounds) {
     mats_.push_back(m);
-    rects_.push_back(bounds);
-  };
-
-  void Build() {
-    for (int i = 0; i < mats_.size(); ++i) {
-      Material* m = mats_[i];
-      Rect r = rects_[i];
-      for (int x = r.x; x < r.x + r.w; ++x) {
-        for (int y = r.y; y < r.y + r.h; ++y) {
-          geom_[x][y] = m;
-        }
-      }
-    }
+    rects_.push_back(Rect2 {bounds.x, bounds.y, bounds.x + bounds.w, bounds.y + bounds.h});
   };
 
   Material* MatFor(int x, int y) {
-    if (geom_.count(x) == 0 || geom_[x].count(y) == 0) {
-      return &blank_;
+    for (int i = 0; i < mats_.size(); ++i) {
+      Rect2 r = rects_[i];
+      if (x >= r.x1 && x < r.x2 && y >= r.y1 && y < r.y2) {
+        return mats_[i];
+      }
     }
-    return geom_[x][y];
+    return &blank_;
   };
 
  private:
+  typedef struct {
+    int x1, y1, x2, y2;
+  } Rect2;
+
   Material blank_;
   std::vector<Material*> mats_;
-  std::vector<Rect> rects_;
-  std::unordered_map<int, std::unordered_map<int, Material*> > geom_;
+  std::vector<Rect2> rects_;
 };
 
 } // namespace phys

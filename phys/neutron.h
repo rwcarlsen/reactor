@@ -3,6 +3,7 @@
 #define NEUTRON_H_
 
 #include <math.h>
+#include <vector>
 
 namespace phys {
 

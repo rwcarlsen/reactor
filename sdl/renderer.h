@@ -4,14 +4,28 @@
 
 #include "SDL2/SDL.h"
 
-#include "color.h"
-#include "error.h"
+#include "sdl/window.h"
+#include "sdl/color.h"
+#include "sdl/error.h"
 
 namespace sdl {
 
 class Renderer {
  public:
-  Renderer(SDL_Renderer* ren) : ren_(ren) { };
+  Renderer(const Window& w, uint32_t flags) : ren_(nullptr) {
+    ren_ = SDL_CreateRenderer(w.raw(), -1, flags);
+    if (ren_ == nullptr) {
+      throw FatalErr();
+    }
+  };
+
+  ~Renderer() {
+    SDL_DestroyRenderer(ren_);
+  };
+
+  SDL_Renderer* raw() const {
+    return ren_;
+  };
 
   SDL_Rect viewport() {
     SDL_Rect r;
@@ -19,28 +33,8 @@ class Renderer {
     return r;
   };
 
-  SDL_Renderer* raw() {
-    return ren_;
-  };
-
   void Render() {
     SDL_RenderPresent(ren_);
-  };
-
-  void FillRect(const SDL_Rect* rect, Color c) {
-    Color orig;
-    if (SDL_GetRenderDrawColor(ren_, &orig.r, &orig.g, &orig.b, &orig.a) != 0) {
-      throw FatalErr();
-    }
-    if (SDL_SetRenderDrawColor(ren_, c.r, c.g, c.b, c.a) != 0) {
-      throw FatalErr();
-    }
-    if (SDL_RenderFillRect(ren_, rect) != 0) {
-      throw FatalErr();
-    }
-    if (SDL_SetRenderDrawColor(ren_, orig.r, orig.g, orig.b, orig.a) != 0) {
-      throw FatalErr();
-    }
   };
 
   void Clear() {

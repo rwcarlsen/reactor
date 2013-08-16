@@ -9,6 +9,7 @@ namespace sdl {
 class Color {
  public:
   Color() : r(0), g(0), b(0), a(SDL_ALPHA_OPAQUE) { };
+
   Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) : r(r), g(g), b(b), a(a) { };
 
 #define COLOR(name, r, g, b) static Color name() {return Color(r, g, b, SDL_ALPHA_OPAQUE);}

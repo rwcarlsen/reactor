@@ -23,29 +23,33 @@ int main(int argc, char** argv) {
 
     int w = 640;
     int h = 480;
-    sdl::Window win(w, h, SDL_WINDOW_SHOWN);
-    win.set_title("Hello World");
-    win.Center();
-
-    sdl::Renderer ren = win.renderer();
+    sdl::Window win("Reactor", w, h, 0);
+    win.Maximize();
+    win.Show();
+    sdl::Renderer ren(win, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     // create geometry
-    phys::BasicMaterial m{0, 0, .05, .99, 0};
+    phys::BasicMaterial m{0, 0, .1, .99, 0};
     phys::Geometry::Rect r{0, 0, 640, 480};
     phys::Geometry geom;
     geom.AddMaterial(&m, r);
-    geom.Build();
 
     // create neutron system
     phys::System sys(geom);
     phys::Neutron::Pop ns;
-    ns.push_back(phys::Neutron(320, 240, .5, .5));
+    for (int i = 0; i < 30000; ++i) {
+      ns.push_back(phys::Neutron(320, 240, .5, .5));
+    }
     sys.AddNeutrons(ns);
 
     // set params
+    double fps = 38;
+    double pix_per_sec = 30;
+    double deltat = pix_per_sec / fps;
+    int neut_len = 2;
+
     sdl::Timer timer;
-    timer.set_framerate(10);
-    double deltat = 0.2;
+    timer.set_framerate(fps);
 
     // run simulation
     SDL_Event ev;
@@ -60,21 +64,19 @@ int main(int argc, char** argv) {
 
       sys.Tick(deltat);
 
-      ren.Clear();
+      sdl::Surface surf(w, h);
       const phys::Neutron::Pop ns = sys.neutrons();
-      for (int i = 0; i < ns.size(); ++i) {
-        const phys::Neutron n = ns[i];
-        SDL_Rect dst = {n.x(), n.y(), 5, 5};
-        ren.FillRect(&dst, Color::red());
+      for (auto it = ns.begin(); it != ns.end(); ++it) {
+        SDL_Rect dst = {it->x(), it->y(), neut_len, neut_len};
+        surf.FillRect(&dst, Color::red());
       }
+
+      ren.Clear();
+      sdl::Texture tex(ren, surf);
+      tex.ApplyFull(0, 0);
       ren.Render();
 
       timer.Wait();
-
-      // safety
-      if (SDL_GetTicks() > 10000) {
-        done = true;
-      }
     }
 
     return 0;

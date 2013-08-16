@@ -28,7 +28,10 @@ class Timer {
     int wait = step_ - delta;
     if (wait > 0) {
       SDL_Delay(wait);
+    } else {
+      std::cout << "WARNING: slow step = " << delta << " ms\n";
     }
+    last_wait_ = SDL_GetTicks();
   };
 
  private:

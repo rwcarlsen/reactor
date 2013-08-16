@@ -14,7 +14,7 @@ const double kPi = 3.141592653589793;
 class BasicMaterial : public Material {
  public:
   BasicMaterial(double pa, double pf, double ps, double sf, double y)
-    : uniform_(0, kPi),
+    : uniform_(0, 2 * kPi),
       p_absorb(pa),
       p_fiss(pf),
       p_scatter(ps),

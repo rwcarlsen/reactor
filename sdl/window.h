@@ -4,28 +4,27 @@
 
 #include "SDL2/SDL.h"
 
-#include "error.h"
-#include "math.h"
-#include "renderer.h"
-#include "texture.h"
+#include "sdl/error.h"
 
 namespace sdl {
 
 class Window {
  public:
-  Window(int width, int height, uint32_t flags) {
-    if (SDL_CreateWindowAndRenderer(width, height, flags, &win_, &ren_) != 0) {
+  Window(std::string title, int width, int height,
+         uint32_t flags) : win_(nullptr) {
+    win_ = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED,
+                            SDL_WINDOWPOS_UNDEFINED, width, height, flags);
+    if (win_ == nullptr) {
       throw FatalErr();
     }
   };
 
   ~Window() {
-    SDL_DestroyRenderer(ren_);
     SDL_DestroyWindow(win_);
   };
 
-  Renderer renderer() {
-    return Renderer(ren_);
+  SDL_Window* raw() const {
+    return win_;
   }
 
   std::string title() {
@@ -42,6 +41,7 @@ class Window {
 
   void set_pos(int x, int y) {
     SDL_SetWindowPosition(win_, x, y);
+    SDL_UpdateWindowSurface(win_);
   };
 
   void size(int* w, int* h) {
@@ -78,7 +78,6 @@ class Window {
 
  private:
   SDL_Window* win_;
-  SDL_Renderer* ren_;
 };
 
 } // namespace sdl

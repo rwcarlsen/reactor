@@ -27,7 +27,6 @@ class System {
 
       Rxn rxn = SelectRxn(*it, m, deltat);
       if (rxn == SCATTER) {
-        
         it->set_v(m->scat_v(it->v()));
         it->Move(deltat);
         ++it;

@@ -2,7 +2,7 @@
 .gitignore
 
 compiler = c++
-cpp_flags = -std=c++11 -I.
+cpp_flags = -O3 -std=c++11 -I.
 link_flags = -std=c++11 -lSDL2
 
 : foreach *.cc |> $(compiler) $(cpp_flags) -c %f -o %o |> %B.o {objs}

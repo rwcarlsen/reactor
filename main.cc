@@ -9,13 +9,16 @@
 #include "sdl/texture.h"
 #include "sdl/sdl_init.h"
 #include "sdl/color.h"
+#include "sdl/timer.h"
 
 #include "phys/system.h"
+#include "phys/basic_material.h"
 
 using sdl::Color;
 
 int main(int argc, char** argv) {
   try {
+    // create window
     sdl::SDLinit init(SDL_INIT_EVERYTHING);
 
     int w = 640;
@@ -25,19 +28,55 @@ int main(int argc, char** argv) {
     win.Center();
 
     sdl::Renderer ren = win.renderer();
-    sdl::Texture tex(ren, "hello.bmp");
 
-    ren.Clear();
+    // create geometry
+    phys::BasicMaterial m{0, 0, .05, .99, 0};
+    phys::Geometry::Rect r{0, 0, 640, 480};
+    phys::Geometry geom;
+    geom.AddMaterial(&m, r);
+    geom.Build();
 
-    SDL_Rect dst = {100, 100, 200, 80};
-    SDL_Rect dst2 = {200, 200, 200, 120};
+    // create neutron system
+    phys::System sys(geom);
+    phys::Neutron::Pop ns;
+    ns.push_back(phys::Neutron(320, 240, .5, .5));
+    sys.AddNeutrons(ns);
 
-    tex.ApplyFull(0, 0);
-    tex.ApplyRects(NULL, &dst);
-    ren.FillRect(&dst2, Color::maroon());
-    ren.Render();
+    // set params
+    sdl::Timer timer;
+    timer.set_framerate(10);
+    double deltat = 0.2;
 
-    SDL_Delay(4000);
+    // run simulation
+    SDL_Event ev;
+    timer.Start();
+    bool done = false;
+    while(!done) {
+      while(SDL_PollEvent(&ev)) {
+        if (ev.type == SDL_QUIT) {
+          done = true;
+        }
+      }
+
+      sys.Tick(deltat);
+
+      ren.Clear();
+      const phys::Neutron::Pop ns = sys.neutrons();
+      for (int i = 0; i < ns.size(); ++i) {
+        const phys::Neutron n = ns[i];
+        SDL_Rect dst = {n.x(), n.y(), 5, 5};
+        ren.FillRect(&dst, Color::red());
+      }
+      ren.Render();
+
+      timer.Wait();
+
+      // safety
+      if (SDL_GetTicks() > 10000) {
+        done = true;
+      }
+    }
+
     return 0;
   } catch (std::exception err) {
     std::cout << "ERROR: " << err.what() << "\n";

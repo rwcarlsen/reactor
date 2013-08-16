@@ -5,17 +5,14 @@
 #include <unordered_map>
 #include <vector>
 
-#include "material.h"
+#include "phys/material.h"
 
 namespace phys {
 
-class Rect {
- public:
-  int x, y, w, h;
-};
-
 class Geometry {
  public:
+  typedef struct{int x, y, w, h;} Rect;
+
   Geometry() : geom_(10000000) { };
 
   void AddMaterial(Material* m, Rect bounds) {
@@ -25,8 +22,8 @@ class Geometry {
 
   void Build() {
     for (int i = 0; i < mats_.size(); ++i) {
-      auto m = mats_[i];
-      auto r = rects_[i];
+      Material* m = mats_[i];
+      Rect r = rects_[i];
       for (int x = r.x; x < r.x + r.w; ++x) {
         for (int y = r.y; y < r.y + r.h; ++y) {
           geom_[x][y] = m;
@@ -35,11 +32,15 @@ class Geometry {
     }
   };
 
-  const Material& MatFor(int x, int y) {
-    return *geom_[x][y];
+  Material* MatFor(int x, int y) {
+    if (geom_.count(x) == 0 || geom_[x].count(y) == 0) {
+      return &blank_;
+    }
+    return geom_[x][y];
   };
 
  private:
+  Material blank_;
   std::vector<Material*> mats_;
   std::vector<Rect> rects_;
   std::unordered_map<int, std::unordered_map<int, Material*> > geom_;

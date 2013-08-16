@@ -12,31 +12,34 @@
 namespace phys {
 
 class System {
-
  public:
   System(Geometry geom) : geom_(geom) { };
+
+  void AddNeutrons(Neutron::Pop ns) {
+    neutrons_.insert(neutrons_.end(), ns.begin(), ns.end());
+  };
 
   void Tick(double deltat) {
     auto it = neutrons_.begin();
     auto end = neutrons_.end();
     while (it != end) {
-      Material m = geom_.MatFor(it->x(), it->y());
+      Material* m = geom_.MatFor(it->x(), it->y());
 
       Rxn rxn = SelectRxn(*it, m, deltat);
       if (rxn == SCATTER) {
-        it->set_vxy(m.new_vx(it->vx()), m.new_vy(it->vy()));
+        
+        it->set_v(m->scat_v(it->v()));
         it->Move(deltat);
         ++it;
-      } else if (rxn == ABSORB){
+      } else if (rxn == ABSORB) {
         it = neutrons_.erase(it);
       } else if (rxn == FISSION) {
-        int yield = m.fiss_yield();
+        int yield = m->fiss_yield();
         for (int i = 0; i < yield; ++i) {
           double x = it->x();
           double y = it->y();
-          double vx = FissV();
-          double vy = FissV();
-          neutrons_.push_back(Neutron(x, y, vx, vy));
+          V v = FissV();
+          neutrons_.push_back(Neutron(x, y, v.x, v.y));
         }
         it = neutrons_.erase(it);
       } else {
@@ -46,23 +49,27 @@ class System {
     }
   };
 
-  const std::vector<Neutron> neutrons() {
+  const Neutron::Pop neutrons() {
     return neutrons_;
   };
 
  private:
-   enum Rxn {NOTHING, FISSION, ABSORB, SCATTER};
+  enum Rxn {NOTHING, FISSION, ABSORB, SCATTER};
+  struct V {double x; double y;};
 
-   double FissV() {
-     return poisson1_(rand_gen_);
-   };
+  V FissV() {
+    V v;
+    v.x = poisson1_(rand_gen_);
+    v.y = poisson1_(rand_gen_);
+    return v;
+  };
 
-  Rxn SelectRxn(const Neutron& neut, Material& m, double deltat) {
+  Rxn SelectRxn(const Neutron& neut, Material* m, double deltat) {
     double speed = neut.speed();
     double distance = speed * deltat;
-    double p_absorb = m.absorb_prob(speed) * distance;
-    double p_fiss = m.fiss_prob(speed) * distance;
-    double p_scatter = m.scatter_prob(speed) * distance;
+    double p_absorb = m->absorb_prob(speed) * distance;
+    double p_fiss = m->fiss_prob(speed) * distance;
+    double p_scatter = m->scatter_prob(speed) * distance;
     double p_nothing = 1 - (p_scatter + p_fiss + p_absorb);
 
     double rn = uniform01_(rand_gen_);
@@ -78,7 +85,7 @@ class System {
   };
 
   Geometry geom_;
-  std::vector<Neutron> neutrons_;
+  Neutron::Pop neutrons_;
 
   std::mt19937_64 rand_gen_;
   std::uniform_real_distribution<> uniform01_;

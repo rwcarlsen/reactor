@@ -26,21 +26,21 @@ int main(int argc, char** argv) {
     int w = 850;
     int h = 650;
     sdl::Window win("Reactor", w, h, 0);
-    win.Maximize();
+    win.Center();
     win.Show();
     sdl::Renderer ren(win, SDL_RENDERER_ACCELERATED);
 
-    // create geometry and system
-    phys::BasicMaterial m{0, 0, .1, .99, 0};
-    phys::Geometry::Rect r{0, 0, w, h};
-    phys::Geometry geom;
-    geom.AddMaterial(&m, r);
-    phys::System sys(geom);
+    // create material geometry
+    phys::BasicMaterial m{.1, 0, .1, .99, 0};
+    phys::Object::Rect r{0, 0, w, h};
+    phys::Object obj(&m, r);
 
-    // create view for drawing the system
+    // create system and a view for drawing it
+    phys::System sys;
+    sys.AddObject(obj);
     draw::SysView view(&sys, &ren);
 
-    // run simulation
+    // start up the main loop
     SDL_Event ev;
     sdl::Timer timer;
     timer.Start();
@@ -68,13 +68,13 @@ int main(int argc, char** argv) {
         sys.AddNeutrons(ns);
       }
 
-      // build neutron coord struct
+      // draw everything to the screen
       view.Render();
     }
 
     return 0;
-  } catch (std::exception err) {
-    std::cout << "ERROR: " << err.what() << "\n";
+  } catch (int err) {
+    std::cout << "ERROR: " << err << "\n";
     return 1;
   }
 }

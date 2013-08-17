@@ -21,7 +21,7 @@ class SysView {
     ren_->set_draw_color(bg_color_);
     ren_->Clear();
 
-    ren_->set_draw_color(neut_color_);
+    DrawGeometry();
     DrawNeutrons();
 
     ren_->Render();
@@ -37,8 +37,12 @@ class SysView {
       points[i].x = it->x();
       points[i].y = it->y();
     }
+
+    ren_->set_draw_color(neut_color_);
     ren_->DrawPoints(points, ns.size());
   };
+
+  void DrawGeometry() { };
 
   sdl::Color bg_color_;
   sdl::Color neut_color_;

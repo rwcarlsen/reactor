@@ -6,69 +6,81 @@
 #include <vector>
 
 #include "phys/material.h"
-#include "phys/geometry.h"
+#include "phys/object.h"
 #include "phys/neutron.h"
 
 namespace phys {
 
 class System {
  public:
-  System(Geometry geom) : geom_(geom) { };
+  System() : blank_(new Material(), Object::Rect()) { };
+
+  ~System() {
+    delete blank_.material();
+  };
+
+  void AddObject(Object o) {
+    objs_.push_back(o);
+  };
 
   void AddNeutrons(Neutron::Pop ns) {
     neutrons_.insert(neutrons_.end(), ns.begin(), ns.end());
   };
 
   void Tick(double deltat) {
-    auto it = neutrons_.begin();
-    auto end = neutrons_.end();
-    while (it != end) {
-      Material* m = geom_.MatFor(it->x(), it->y());
+    for (int i = 0; i < neutrons_.size(); ++i) {
+      Neutron* n = &neutrons_[i];
+      Object* obj = ObjectFor(n->x(), n->y());
+      Material* m = obj->material();
 
-      Rxn rxn = SelectRxn(*it, m, deltat);
+      Rxn rxn = SelectRxn(n, m, deltat);
       if (rxn == SCATTER) {
-        it->set_v(m->scat_v(it->v(), it->speed()));
-        it->Move(deltat);
-        ++it;
+        n->set_v(m->scat_v(n->v(), n->speed()));
+        n->Move(deltat);
       } else if (rxn == ABSORB) {
-        it = neutrons_.erase(it);
+        neutrons_[i] = neutrons_[neutrons_.size() - 1];
+        neutrons_.pop_back();
+        i--;
       } else if (rxn == FISSION) {
+        neutrons_[i] = neutrons_[neutrons_.size() - 1];
+        neutrons_.pop_back();
+        i--;
+
         int yield = m->fiss_yield();
-        for (int i = 0; i < yield; ++i) {
-          double x = it->x();
-          double y = it->y();
+        for (int j = 0; j < yield; ++j) {
+          double x = n->x();
+          double y = n->y();
           V v = FissV();
           neutrons_.push_back(Neutron(x, y, v.x, v.y));
         }
-        it = neutrons_.erase(it);
       } else {
-        it->Move(deltat);
-        ++it;
+        n->Move(deltat);
       }
     }
   };
+
+  Object* ObjectFor(int x, int y) {
+    for (int i = 0; i < objs_.size(); ++i) {
+      if (objs_[i].Contains(x, y)) {
+        return &objs_[i];
+      }
+    }
+    return &blank_;
+  }
 
   const Neutron::Pop neutrons() const {
     return neutrons_;
   };
 
-  const Geometry& geometry() const {
-    return geom_;
-  };
-
  private:
   enum Rxn {NOTHING, FISSION, ABSORB, SCATTER};
-  struct V {double x; double y;};
-
-  V FissV() {
-    V v;
-    v.x = poisson1_(rand_gen_);
-    v.y = poisson1_(rand_gen_);
-    return v;
+  struct V {
+    double x;
+    double y;
   };
 
-  Rxn SelectRxn(const Neutron& neut, Material* m, double deltat) {
-    double speed = neut.speed();
+  Rxn SelectRxn(const Neutron* neut, Material* m, double deltat) {
+    double speed = neut->speed();
     double distance = speed * deltat;
     double p_absorb = m->absorb_prob(speed) * distance;
     double p_fiss = m->fiss_prob(speed) * distance;
@@ -87,7 +99,15 @@ class System {
     }
   };
 
-  Geometry geom_;
+  V FissV() {
+    V v;
+    v.x = poisson1_(rand_gen_);
+    v.y = poisson1_(rand_gen_);
+    return v;
+  };
+
+  std::vector<Object> objs_;
+  Object blank_;
   Neutron::Pop neutrons_;
 
   std::ranlux48_base rand_gen_;

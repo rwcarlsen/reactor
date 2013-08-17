@@ -8,35 +8,36 @@ namespace sdl {
 
 class Timer {
  public:
-  Timer() : last_wait_(0), step_(100) { };
-
-  void set_step(int msec) {
-    step_ = msec;
-  };
-
-  void set_framerate(int fps) {
-    step_ = 1000 / fps;
-  };
+  Timer() { };
 
   void Start() {
-    last_wait_ = SDL_GetTicks();
+    start_ = SDL_GetTicks();
+    mark_ = start_;
   }
 
-  void Wait() {
+  void Reset() {
+    start_ = SDL_GetTicks();
+    mark_ = start_;
+  }
+
+  int SinceStart() {
+    return SDL_GetTicks() - start_;
+  }
+
+  int SinceMark() {
+    return SDL_GetTicks() - mark_;
+  }
+
+  int Mark() {
     int curr = SDL_GetTicks();
-    int delta = curr - last_wait_;
-    int wait = step_ - delta;
-    if (wait > 0) {
-      SDL_Delay(wait);
-    } else {
-      std::cout << "WARNING: slow step = " << delta << " ms\n";
-    }
-    last_wait_ = SDL_GetTicks();
+    int delta = curr - mark_;
+    mark_ = curr;
+    return delta;
   };
 
  private:
-  int last_wait_;
-  int step_;
+  int start_;
+  int mark_;
 };
 
 } // namespace sdl

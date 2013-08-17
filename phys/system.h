@@ -48,8 +48,12 @@ class System {
     }
   };
 
-  const Neutron::Pop neutrons() {
+  const Neutron::Pop neutrons() const {
     return neutrons_;
+  };
+
+  const Geometry& geometry() const {
+    return geom_;
   };
 
  private:

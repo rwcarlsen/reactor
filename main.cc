@@ -14,76 +14,62 @@
 #include "phys/system.h"
 #include "phys/basic_material.h"
 
+#include "draw/sys_view.h"
+
 using sdl::Color;
 
 int main(int argc, char** argv) {
   try {
-    // create window
     sdl::SDLinit init(SDL_INIT_EVERYTHING);
 
-    int w = 640;
-    int h = 480;
+    // create window and renderer
+    int w = 850;
+    int h = 650;
     sdl::Window win("Reactor", w, h, 0);
     win.Maximize();
     win.Show();
-    sdl::Renderer ren(win, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    sdl::Renderer ren(win, SDL_RENDERER_ACCELERATED);
 
-    // create geometry
+    // create geometry and system
     phys::BasicMaterial m{0, 0, .1, .99, 0};
-    phys::Geometry::Rect r{0, 0, 640, 480};
+    phys::Geometry::Rect r{0, 0, w, h};
     phys::Geometry geom;
     geom.AddMaterial(&m, r);
-
-    // create neutron system
     phys::System sys(geom);
-    phys::Neutron::Pop ns;
-    for (int i = 0; i < 210000; ++i) {
-      ns.push_back(phys::Neutron(320, 240, .5, .5));
-    }
-    sys.AddNeutrons(ns);
 
-    // set params
-    double fps = 35;
-    double pix_per_sec = 30;
-    double deltat = pix_per_sec / fps;
-    int neut_len = 1;
-
-    sdl::Timer timer;
-    timer.set_framerate(fps);
-
-    // get pixel fmts - for performance
-    uint32_t redpix = Color::red().pix();
-    uint32_t blkpix = Color::black().pix();
-    sdl::Surface surf(w, h);
+    // create view for drawing the system
+    draw::SysView view(&sys, &ren);
 
     // run simulation
     SDL_Event ev;
+    sdl::Timer timer;
     timer.Start();
     bool done = false;
     while(!done) {
+      // process events
       while(SDL_PollEvent(&ev)) {
         if (ev.type == SDL_QUIT) {
           done = true;
         }
       }
+      
+      // calculate timing
+      double dt = (double)timer.Mark();
+      int fps = 1000 / dt;
+      std::cout << fps << " fps, N = " << sys.neutrons().size() << "\n";
+      sys.Tick(dt / 1000);
 
-      sys.Tick(deltat);
-
-      // redraw neutrons
-      surf.FillRectPix(NULL, blkpix); // wipe surface
-      const phys::Neutron::Pop ns = sys.neutrons();
-      for (auto it = ns.begin(); it != ns.end(); ++it) {
-        SDL_Rect dst = {it->x(), it->y(), neut_len, neut_len};
-        surf.FillRectPix(&dst, redpix);
+      // adjust neutron population
+      if (fps > 35) {
+        phys::Neutron::Pop ns;
+        for (int i = 0; i < 5000; ++i) {
+          ns.push_back(phys::Neutron(w / 2, h / 2, 15, 15));
+        }
+        sys.AddNeutrons(ns);
       }
 
-      // render everything
-      ren.Clear();
-      sdl::Texture tex(ren, surf);
-      tex.ApplyFull(0, 0);
-      ren.Render();
-
-      timer.Wait();
+      // build neutron coord struct
+      view.Render();
     }
 
     return 0;

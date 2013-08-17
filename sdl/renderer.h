@@ -27,6 +27,18 @@ class Renderer {
     return ren_;
   };
 
+  void set_draw_color(Color c) {
+    if (SDL_SetRenderDrawColor(ren_, c.r, c.g, c.b, c.a) != 0) {
+      throw FatalErr();
+    }
+  }
+
+  void DrawPoints(SDL_Point* points, int npoints) {
+    if (SDL_RenderDrawPoints(ren_, points, npoints) != 0) {
+      throw FatalErr();
+    }
+  }
+
   SDL_Rect viewport() {
     SDL_Rect r;
     SDL_RenderGetViewport(ren_, &r);

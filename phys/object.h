@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "sdl/surface.h"
+#include "sdl/color.h"
 #include "phys/material.h"
 
 namespace phys {
@@ -15,7 +17,10 @@ class Object {
     int x, y, w, h;
   } Rect;
 
-  Object(Material* m, Rect bounds) : m_(m), r_(bounds) { }
+  Object(Material* m, Rect bounds) : m_(m), r_(bounds) {
+    surf_ = new sdl::Surface(bounds.w, bounds.h);
+    surf_->FillRect(NULL, sdl::Color::black());
+  }
 
   bool Contains(int x, int y) const {
     return (x >= r_.x) && (x < r_.x + r_.w) &&
@@ -26,6 +31,14 @@ class Object {
     return m_;
   }
 
+  Rect rect() {
+    return r_;
+  }
+
+  sdl::Surface* surface() const {
+    return surf_;
+  }
+
   void Shift(int dx, int dy) {
     r_.x += dx;
     r_.y += dy;
@@ -34,6 +47,7 @@ class Object {
  private:
   Material* m_;
   Rect r_;
+  sdl::Surface* surf_;
 };
 
 } // namespace phys

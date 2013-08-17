@@ -6,7 +6,11 @@
 
 #include "sdl/renderer.h"
 #include "sdl/color.h"
+#include "sdl/texture.h"
+#include "sdl/surface.h"
+
 #include "phys/system.h"
+#include "phys/object.h"
 
 namespace draw {
 
@@ -28,6 +32,17 @@ class SysView {
   };
 
  private:
+  void DrawGeometry() {
+    const std::vector<phys::Object> objs = sys_->objects();
+    for (int i = 0; i < objs.size(); ++i) {
+      phys::Object obj = objs[i];
+      sdl::Surface* surf = obj.surface();
+      phys::Object::Rect r = obj.rect();
+      sdl::Texture tex(*ren_, *surf);
+      tex.ApplyFull(r.x, r.y);
+    }
+  };
+
   void DrawNeutrons() {
     const phys::Neutron::Pop ns = sys_->neutrons();
     SDL_Point points[ns.size()];
@@ -41,8 +56,6 @@ class SysView {
     ren_->set_draw_color(neut_color_);
     ren_->DrawPoints(points, ns.size());
   };
-
-  void DrawGeometry() { };
 
   sdl::Color bg_color_;
   sdl::Color neut_color_;

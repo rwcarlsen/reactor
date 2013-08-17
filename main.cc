@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
     sdl::Renderer ren(win, SDL_RENDERER_ACCELERATED);
 
     // create material geometry
-    phys::BasicMaterial m{.1, 0, .1, .99, 0};
+    phys::BasicMaterial m{.002, 0, .1, .99, 0};
     phys::Object::Rect r{0, 0, w, h};
     phys::Object obj(&m, r);
 
@@ -73,8 +73,8 @@ int main(int argc, char** argv) {
     }
 
     return 0;
-  } catch (int err) {
-    std::cout << "ERROR: " << err << "\n";
+  } catch (std::exception err) {
+    std::cout << "ERROR: " << err.what() << "\n";
     return 1;
   }
 }

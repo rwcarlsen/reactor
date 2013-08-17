@@ -13,7 +13,7 @@ namespace phys {
 
 class System {
  public:
-  System() : blank_(new Material(), Object::Rect()) { };
+  System() : blank_(new Material(), Object::Rect{0, 0, 1, 1}) { };
 
   ~System() {
     delete blank_.material();
@@ -70,6 +70,10 @@ class System {
 
   const Neutron::Pop neutrons() const {
     return neutrons_;
+  };
+
+  const std::vector<Object>& objects() const {
+    return objs_;
   };
 
  private:

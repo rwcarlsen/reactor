@@ -13,7 +13,10 @@ namespace phys {
 
 class System {
  public:
-  System() : blank_(new Material(), Object::Rect{0, 0, 1, 1}) { };
+  System(int w, int h)
+    : width_(w),
+      height_(h),
+    blank_(new Material(), Object::Rect {0, 0, 1, 1}) { };
 
   ~System() {
     delete blank_.material();
@@ -32,6 +35,14 @@ class System {
       Neutron* n = &neutrons_[i];
       Object* obj = ObjectFor(n->x(), n->y());
       Material* m = obj->material();
+
+      // remove out of bounds neutrons
+      if (n->x() < 0 || n->y() < 0 || n->x() > width_ || n->y() > height_) {
+        neutrons_[i] = neutrons_[neutrons_.size() - 1];
+        neutrons_.pop_back();
+        i--;
+        continue;
+      }
 
       Rxn rxn = SelectRxn(n, m, deltat);
       if (rxn == SCATTER) {
@@ -113,6 +124,9 @@ class System {
   std::vector<Object> objs_;
   Object blank_;
   Neutron::Pop neutrons_;
+
+  int width_;
+  int height_;
 
   std::ranlux48_base rand_gen_;
   std::uniform_real_distribution<> uniform01_;

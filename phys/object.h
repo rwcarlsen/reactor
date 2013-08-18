@@ -17,9 +17,9 @@ class Object {
     int x, y, w, h;
   } Rect;
 
-  Object(Material* m, Rect bounds) : m_(m), r_(bounds) {
+  Object(Material* m, Rect bounds, sdl::Color c = sdl::Color::white()) : m_(m), r_(bounds) {
     surf_ = new sdl::Surface(bounds.w, bounds.h);
-    surf_->FillRect(NULL, sdl::Color::black());
+    surf_->FillRect(NULL, c);
   }
 
   bool Contains(int x, int y) const {

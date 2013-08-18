@@ -31,13 +31,23 @@ int main(int argc, char** argv) {
     sdl::Renderer ren(win, SDL_RENDERER_ACCELERATED);
 
     // create material geometry
-    phys::BasicMaterial m{.002, 0, .1, .99, 0};
-    phys::Object::Rect r{0, 0, w, h};
-    phys::Object obj(&m, r);
+    phys::BasicMaterial m1{0, 0, .1, 1, 0};
+    phys::Object::Rect r1{w/2 - 40, h/2 - 40, 80, 80};
+    phys::Object reflector(&m1, r1, sdl::Color::white());
+
+    phys::BasicMaterial m2{.1, 0, 0, 1, 0};
+    phys::Object::Rect r2{w/2 - 130, h/2 - 40, 80, 80};
+    phys::Object absorber(&m2, r2, sdl::Color::blue());
+
+    phys::BasicMaterial m3{0, 0, .1, .8, 0};
+    phys::Object::Rect r3{w/2 + 50, h/2 - 40, 80, 80};
+    phys::Object moderator(&m3, r3, sdl::Color::green());
 
     // create system and a view for drawing it
-    phys::System sys;
-    sys.AddObject(obj);
+    phys::System sys(w, h);
+    sys.AddObject(reflector);
+    sys.AddObject(absorber);
+    sys.AddObject(moderator);
     draw::SysView view(&sys, &ren);
 
     // start up the main loop
@@ -45,11 +55,20 @@ int main(int argc, char** argv) {
     sdl::Timer timer;
     timer.Start();
     bool done = false;
+    bool dragging = false;
+    phys::Object* dragged = nullptr;
     while(!done) {
       // process events
       while(SDL_PollEvent(&ev)) {
         if (ev.type == SDL_QUIT) {
           done = true;
+        } else if (ev.type == SDL_MOUSEBUTTONDOWN) {
+          dragged = sys.ObjectFor(ev.button.x, ev.button.y);
+          dragging = true;
+        } else if (ev.type == SDL_MOUSEBUTTONUP) {
+          dragging = false;
+        } else if (ev.type == SDL_MOUSEMOTION && dragging) {
+          dragged->Shift(ev.motion.xrel, ev.motion.yrel);
         }
       }
       

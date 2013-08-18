@@ -16,9 +16,14 @@
 
 #include "draw/sys_view.h"
 
+#include "polarizer.h"
+
 using sdl::Color;
 
 int main(int argc, char** argv) {
+  std::ranlux48_base rand_gen;
+  std::uniform_real_distribution<> uniform01;
+
   try {
     sdl::SDLinit init(SDL_INIT_EVERYTHING);
 
@@ -62,10 +67,19 @@ int main(int argc, char** argv) {
       while(SDL_PollEvent(&ev)) {
         if (ev.type == SDL_QUIT) {
           done = true;
-        } else if (ev.type == SDL_MOUSEBUTTONDOWN) {
+        } else if (ev.type == SDL_MOUSEBUTTONDOWN && ev.button.button == SDL_BUTTON_RIGHT) {
+          // create some neutrons
+          phys::Neutron::Pop ns;
+          for (int i = 0; i < 5000; ++i) {
+            int vx = 50; // uniform01(rand_gen) * 30 - 15;
+            int vy = 0; // uniform01(rand_gen) * 30 - 15;
+            ns.push_back(phys::Neutron(ev.button.x, ev.button.y, vx, vy));
+          }
+          sys.AddNeutrons(ns);
+        } else if (ev.type == SDL_MOUSEBUTTONDOWN && ev.button.button == SDL_BUTTON_LEFT) {
           dragged = sys.ObjectFor(ev.button.x, ev.button.y);
           dragging = true;
-        } else if (ev.type == SDL_MOUSEBUTTONUP) {
+        } else if (ev.type == SDL_MOUSEBUTTONUP && ev.button.button == SDL_BUTTON_LEFT) {
           dragging = false;
         } else if (ev.type == SDL_MOUSEMOTION && dragging) {
           dragged->Shift(ev.motion.xrel, ev.motion.yrel);
@@ -74,18 +88,8 @@ int main(int argc, char** argv) {
       
       // calculate timing
       double dt = (double)timer.Mark();
-      int fps = 1000 / dt;
-      std::cout << fps << " fps, N = " << sys.neutrons().size() << "\n";
+      //std::cout << 1000 / dt << " fps, N = " << sys.neutrons().size() << "\n";
       sys.Tick(dt / 1000);
-
-      // adjust neutron population
-      if (fps > 35) {
-        phys::Neutron::Pop ns;
-        for (int i = 0; i < 5000; ++i) {
-          ns.push_back(phys::Neutron(w / 2, h / 2, 15, 15));
-        }
-        sys.AddNeutrons(ns);
-      }
 
       // draw everything to the screen
       view.Render();

@@ -25,7 +25,6 @@ class Surface {
     if (surf_ == nullptr) {
       throw FatalErr();
     }
-    std::cout << "spot5\n";
   };
 
   ~Surface() {

@@ -116,8 +116,8 @@ class System {
 
   V FissV() {
     V v;
-    v.x = poisson1_(rand_gen_);
-    v.y = poisson1_(rand_gen_);
+    v.x = poisson1_(rand_gen_) * 15;
+    v.y = poisson1_(rand_gen_) * 15;
     return v;
   };
 

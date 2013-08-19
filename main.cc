@@ -47,6 +47,8 @@ int main(int argc, char** argv) {
     phys::Object::Rect r2{w/2 - 130, h/2 - 40, 80, 80};
     phys::Object absorber(&m2, r2, sdl::Color::blue());
     phys::Object absorber2(absorber);
+    phys::Object absorber3(absorber);
+    phys::Object absorber4(absorber);
 
     phys::BasicMaterial m3{0, 0, .03, .3, 0};
     phys::Object::Rect r3{w/2 + 50, h/2 - 40, 80, 80};
@@ -70,6 +72,8 @@ int main(int argc, char** argv) {
     sys.AddObject(&reflector4);
     sys.AddObject(&absorber);
     sys.AddObject(&absorber2);
+    sys.AddObject(&absorber3);
+    sys.AddObject(&absorber4);
     sys.AddObject(&moderator);
     sys.AddObject(&moderator2);
     sys.AddObject(&moderator3);

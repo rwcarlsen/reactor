@@ -6,7 +6,7 @@
 
 namespace phys {
 
-// all probabilities given per unit length
+// all probabilities (x-sec) given per meter
 class Material {
  public:
   virtual double absorb_prob(double speed) {

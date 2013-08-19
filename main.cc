@@ -57,12 +57,17 @@ int main(int argc, char** argv) {
     phys::Object moderator3(moderator);
     phys::Object moderator4(moderator);
 
-    Fuel m4(0, 0.03, 2);
+    Fuel m4(0, 0.05, 2);
     phys::Object::Rect r4{w/2 - 20, h/2 + 50, 40, 40};
     phys::Object fuel(&m4, r4, sdl::Color::purple());
     phys::Object fuel2(fuel);
     phys::Object fuel3(fuel);
     phys::Object fuel4(fuel);
+    phys::Object fuel5(fuel);
+    phys::Object fuel6(fuel);
+    phys::Object fuel7(fuel);
+    phys::Object fuel8(fuel);
+    phys::Object fuel9(fuel);
 
     // create system and a view for drawing it
     phys::System sys(w, h);
@@ -82,6 +87,11 @@ int main(int argc, char** argv) {
     sys.AddObject(&fuel2);
     sys.AddObject(&fuel3);
     sys.AddObject(&fuel4);
+    sys.AddObject(&fuel5);
+    sys.AddObject(&fuel6);
+    sys.AddObject(&fuel7);
+    sys.AddObject(&fuel8);
+    sys.AddObject(&fuel9);
     draw::SysView view(&sys, &ren);
 
     // start up the main loop
@@ -110,6 +120,19 @@ int main(int argc, char** argv) {
           dragged = sys.ObjectFor(ev.button.x, ev.button.y);
           sys.MoveTop(dragged);
           dragging = true;
+        } else if (ev.type == SDL_KEYDOWN) {
+          if (dragged == nullptr) {
+            continue;
+          }
+          if (ev.key.keysym.sym == SDLK_DOWN) {
+            dragged->Shift(0, 5);
+          } else if (ev.key.keysym.sym == SDLK_UP) {
+            dragged->Shift(0, -5);
+          } else if (ev.key.keysym.sym == SDLK_LEFT) {
+            dragged->Shift(-5, 0);
+          } else if (ev.key.keysym.sym == SDLK_RIGHT) {
+            dragged->Shift(5, 0);
+          }
         } else if (ev.type == SDL_MOUSEBUTTONUP && ev.button.button == SDL_BUTTON_LEFT) {
           dragging = false;
         } else if (ev.type == SDL_MOUSEMOTION && dragging) {

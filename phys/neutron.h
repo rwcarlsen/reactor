@@ -19,8 +19,8 @@ class Neutron {
 
   typedef std::vector<Neutron> Pop;
 
-  constexpr static double kMinSpeed = 10;
-  constexpr static double kNomSpeed = 100;
+  constexpr static double kMinSpeed = 15;
+  constexpr static double kNomSpeed = 150;
 
   Neutron(double x, double y, double vx, double vy) : x_(x), y_(y), vx_(vx),
     vy_(vy) {

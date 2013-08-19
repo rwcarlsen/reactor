@@ -20,7 +20,7 @@ class Fuel : public phys::Material {
   };
 
   virtual phys::Neutron::V scat_v(phys::Neutron::V v, double speed) {
-    double theta = uniform_(rand_gen_);
+    double theta = uniform_(rand_gen_) * 2 * phys::kPi;
     double vy = speed * std::sin(theta);
     double vx = speed * std::cos(theta);
     return phys::Neutron::V {vx, vy};

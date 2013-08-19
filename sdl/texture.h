@@ -36,6 +36,8 @@ class Texture {
     SDL_DestroyTexture(tex_);
   };
 
+  Texture(const Texture& that) = delete;
+
   void ApplyFull(int x, int y) {
     if (ren_ == nullptr || tex_ == nullptr) {
       throw FatalErr("Uninitialized texture");

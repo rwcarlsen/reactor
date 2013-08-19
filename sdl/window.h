@@ -23,6 +23,8 @@ class Window {
     SDL_DestroyWindow(win_);
   };
 
+  Window(const Window& that) = delete;
+
   SDL_Window* raw() const {
     return win_;
   }

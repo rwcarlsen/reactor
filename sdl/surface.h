@@ -32,6 +32,8 @@ class Surface {
     SDL_FreeSurface(surf_);
   };
 
+  Surface(const Surface& that) = delete;
+
   SDL_Surface* raw() const {
     return surf_;
   };

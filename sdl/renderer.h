@@ -23,6 +23,8 @@ class Renderer {
     SDL_DestroyRenderer(ren_);
   };
 
+  Renderer(const Renderer& that) = delete;
+
   SDL_Renderer* raw() const {
     return ren_;
   };

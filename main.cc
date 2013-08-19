@@ -16,6 +16,8 @@
 
 #include "draw/sys_view.h"
 
+#include "fuel.h"
+
 using sdl::Color;
 
 int main(int argc, char** argv) {
@@ -46,7 +48,7 @@ int main(int argc, char** argv) {
     phys::Object::Rect r3{w/2 + 50, h/2 - 40, 80, 80};
     phys::Object moderator(&m3, r3, sdl::Color::green());
 
-    phys::BasicMaterial m4{0, .02, 0, 0, 2};
+    Fuel m4(0, 0.03, 2);
     phys::Object::Rect r4{w/2 - 20, h/2 + 50, 40, 40};
     phys::Object fuel(&m4, r4, sdl::Color::purple());
 
@@ -75,9 +77,8 @@ int main(int argc, char** argv) {
           phys::Neutron::Pop ns;
           for (int i = 0; i < 5000; ++i) {
             double theta = uniform01(rand_gen) * 2 * 3.141592654;
-            double speed = 40;
-            int vx = std::cos(theta) * speed;
-            int vy = std::sin(theta) * speed;
+            int vx = std::cos(theta) * phys::Neutron::kNomSpeed;
+            int vy = std::sin(theta) * phys::Neutron::kNomSpeed;
             ns.push_back(phys::Neutron(ev.button.x, ev.button.y, vx, vy));
           }
           sys.AddNeutrons(ns);
@@ -91,12 +92,6 @@ int main(int argc, char** argv) {
         }
       }
 
-      // too small timesteps cause floating point problems with neutron rxn calc.
-      int since = timer.SinceMark();
-      if (since < 20) {
-        SDL_Delay(20 - since);
-      }
-      
       double dt = (double)timer.Mark();
       sys.Tick(dt / 1000);
       view.Render(((double)1000) / dt);

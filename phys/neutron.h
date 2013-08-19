@@ -7,12 +7,19 @@
 
 namespace phys {
 
-const double kPi = 3.141592653589793;
+static const double kPi = 3.141592653589793;
 
 class Neutron {
  public:
-  typedef struct{double x; double y;} V;
+  typedef struct {
+    double x;
+    double y;
+  } V;
+
   typedef std::vector<Neutron> Pop;
+
+  constexpr static double kMinSpeed = 10;
+  constexpr static double kNomSpeed = 100;
 
   Neutron(double x, double y, double vx, double vy) : x_(x), y_(y), vx_(vx),
     vy_(vy) {

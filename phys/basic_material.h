@@ -36,7 +36,7 @@ class BasicMaterial : public Material {
     double vy = speed * std::sin(theta);
     double vx = speed * std::cos(theta);
 
-    if (speed > 5) {
+    if (speed > Neutron::kMinSpeed) {
       vx *= scat_frac;
       vy *= scat_frac;
     }

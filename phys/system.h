@@ -117,7 +117,7 @@ class System {
   V FissV() {
     V v;
     double theta = uniform01_(rand_gen_) * 2 * kPi;
-    double speed = 30 * poisson1_(rand_gen_) + 5;
+    double speed = Neutron::kNomSpeed * poisson1_(rand_gen_) + Neutron::kMinSpeed;
     v.x = std::cos(theta) * speed;
     v.y = std::sin(theta) * speed;
     return v;

@@ -3,6 +3,7 @@
 #define DRAW_NEUTRONS_H_
 
 #include <sstream>
+#include <iomanip>
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_ttf.h"
@@ -66,15 +67,31 @@ class SysView {
     ren_->DrawPoints(points, ns.size());
   };
 
-  void DrawInfo(double fps) {
+  std::string FixedWidthInt(int v, int len) {
+    std::string fixed;
     std::stringstream ss;
-    ss << "FPS: " << (int)fps;
+    std::stringstream ssf;
+    ss << v;
+    if (ss.str().size() < len) {
+      for (int i = 0; i < len - ss.str().size(); ++i) {
+        ssf << "0";
+      }
+    }
+    ssf << ss.str();
+    return ssf.str();
+  }
+
+  void DrawInfo(double fps) {
+    std::string sfps = FixedWidthInt((int)fps, 4);
+    std::stringstream ss;
+    ss << "FPS: " << sfps;
     auto surf = font_.RenderBlended(ss.str().c_str(), font_color_);
     sdl::Texture tex(*ren_, *surf.get());
     tex.ApplyFull(10, 10);
 
+    std::string nn = FixedWidthInt(sys_->neutrons().size(), 7);
     std::stringstream ss2;
-    ss2 << "Neutrons: " << sys_->neutrons().size();
+    ss2 << "Neutrons: " << nn;
     auto surf2 = font_.RenderBlended(ss2.str().c_str(), font_color_);
     sdl::Texture tex2(*ren_, *surf2.get());
     tex2.ApplyFull(10, 30);

@@ -4,6 +4,8 @@
 
 #include "SDL2/SDL.h"
 
+#include "error.h"
+
 namespace sdl {
 
 class Color {

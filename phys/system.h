@@ -22,7 +22,7 @@ class System {
     delete blank_.material();
   };
 
-  void AddObject(Object o) {
+  void AddObject(Object* o) {
     objs_.push_back(o);
   };
 
@@ -70,10 +70,20 @@ class System {
     }
   };
 
+  void MoveTop(Object* obj) {
+    for (int i = 0; i < objs_.size(); ++i) {
+      if (objs_[i] == obj) {
+        objs_.erase(objs_.begin() + i);
+        objs_.push_back(obj);
+        break;
+      }
+    }
+  }
+
   Object* ObjectFor(int x, int y) {
     for (int i = objs_.size() - 1; i >= 0; --i) {
-      if (objs_[i].Contains(x, y)) {
-        return &objs_[i];
+      if (objs_[i]->Contains(x, y)) {
+        return objs_[i];
       }
     }
     return &blank_;
@@ -83,7 +93,7 @@ class System {
     return neutrons_;
   };
 
-  const std::vector<Object>& objects() const {
+  const std::vector<Object*>& objects() const {
     return objs_;
   };
 
@@ -123,7 +133,7 @@ class System {
     return v;
   };
 
-  std::vector<Object> objs_;
+  std::vector<Object*> objs_;
   Object blank_;
   Neutron::Pop neutrons_;
 

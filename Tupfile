@@ -5,6 +5,6 @@ compiler = c++
 cpp_flags = -O3 -std=c++11 -I.
 link_flags = -std=c++11 -lSDL2 -lSDL2_ttf
 
-: foreach *.cc |> $(compiler) $(cpp_flags) -c %f -o %o |> %B.o {objs}
+: foreach *.cc phys/*.cc |> $(compiler) $(cpp_flags) -c %f -o %o |> %B.o {objs}
 : {objs} |> $(compiler) $(link_flags) %f -o %o |> main
 

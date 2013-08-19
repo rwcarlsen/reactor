@@ -2,6 +2,7 @@
 #ifndef NEUTRON_H_
 #define NEUTRON_H_
 
+#include <cmath>
 #include <math.h>
 #include <vector>
 

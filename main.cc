@@ -37,27 +37,47 @@ int main(int argc, char** argv) {
 
     // create material geometry
     phys::BasicMaterial m1{0, 0, .1, 1, 0};
-    phys::Object::Rect r1{w/2 - 40, h/2 - 40, 80, 80};
+    phys::Object::Rect r1{w/2 - 40, h/2 - 40, 120, 120};
     phys::Object reflector(&m1, r1, sdl::Color::white());
+    phys::Object reflector2(reflector);
+    phys::Object reflector3(reflector);
+    phys::Object reflector4(reflector);
 
     phys::BasicMaterial m2{.1, 0, 0, 1, 0};
     phys::Object::Rect r2{w/2 - 130, h/2 - 40, 80, 80};
     phys::Object absorber(&m2, r2, sdl::Color::blue());
+    phys::Object absorber2(absorber);
 
-    phys::BasicMaterial m3{0, 0, .1, .8, 0};
+    phys::BasicMaterial m3{0, 0, .03, .3, 0};
     phys::Object::Rect r3{w/2 + 50, h/2 - 40, 80, 80};
     phys::Object moderator(&m3, r3, sdl::Color::green());
+    phys::Object moderator2(moderator);
+    phys::Object moderator3(moderator);
+    phys::Object moderator4(moderator);
 
     Fuel m4(0, 0.03, 2);
     phys::Object::Rect r4{w/2 - 20, h/2 + 50, 40, 40};
     phys::Object fuel(&m4, r4, sdl::Color::purple());
+    phys::Object fuel2(fuel);
+    phys::Object fuel3(fuel);
+    phys::Object fuel4(fuel);
 
     // create system and a view for drawing it
     phys::System sys(w, h);
-    sys.AddObject(reflector);
-    sys.AddObject(absorber);
-    sys.AddObject(moderator);
-    sys.AddObject(fuel);
+    sys.AddObject(&reflector);
+    sys.AddObject(&reflector2);
+    sys.AddObject(&reflector3);
+    sys.AddObject(&reflector4);
+    sys.AddObject(&absorber);
+    sys.AddObject(&absorber2);
+    sys.AddObject(&moderator);
+    sys.AddObject(&moderator2);
+    sys.AddObject(&moderator3);
+    sys.AddObject(&moderator4);
+    sys.AddObject(&fuel);
+    sys.AddObject(&fuel2);
+    sys.AddObject(&fuel3);
+    sys.AddObject(&fuel4);
     draw::SysView view(&sys, &ren);
 
     // start up the main loop
@@ -84,6 +104,7 @@ int main(int argc, char** argv) {
           sys.AddNeutrons(ns);
         } else if (ev.type == SDL_MOUSEBUTTONDOWN && ev.button.button == SDL_BUTTON_LEFT) {
           dragged = sys.ObjectFor(ev.button.x, ev.button.y);
+          sys.MoveTop(dragged);
           dragging = true;
         } else if (ev.type == SDL_MOUSEBUTTONUP && ev.button.button == SDL_BUTTON_LEFT) {
           dragging = false;

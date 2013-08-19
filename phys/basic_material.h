@@ -33,12 +33,14 @@ class BasicMaterial : public Material {
 
   virtual Neutron::V scat_v(Neutron::V v, double speed) {
     double theta = uniform_(rand_gen_);
-    double vy = speed * std::sin(theta);
-    double vx = speed * std::cos(theta);
-
-    if (speed > Neutron::kMinSpeed) {
-      vx *= scat_frac;
-      vy *= scat_frac;
+    double vy;
+    double vx;
+    if (speed * scat_frac > Neutron::kMinSpeed) {
+      vy = speed * scat_frac * std::sin(theta);
+      vx = speed * scat_frac * std::cos(theta);
+    } else {
+      vy = Neutron::kMinSpeed * std::sin(theta);
+      vx = Neutron::kMinSpeed * std::cos(theta);
     }
     return Neutron::V {vx, vy};
   };

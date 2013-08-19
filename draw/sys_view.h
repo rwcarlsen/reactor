@@ -43,11 +43,11 @@ class SysView {
 
  private:
   void DrawGeometry() {
-    const std::vector<phys::Object> objs = sys_->objects();
+    const std::vector<phys::Object*> objs = sys_->objects();
     for (int i = 0; i < objs.size(); ++i) {
-      phys::Object obj = objs[i];
-      sdl::Surface* surf = obj.surface();
-      phys::Object::Rect r = obj.rect();
+      phys::Object* obj = objs[i];
+      sdl::Surface* surf = obj->surface();
+      phys::Object::Rect r = obj->rect();
       sdl::Texture tex(*ren_, *surf);
       tex.ApplyFull(r.x, r.y);
     }

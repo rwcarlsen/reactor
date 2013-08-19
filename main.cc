@@ -16,8 +16,6 @@
 
 #include "draw/sys_view.h"
 
-#include "polarizer.h"
-
 using sdl::Color;
 
 int main(int argc, char** argv) {
@@ -48,11 +46,16 @@ int main(int argc, char** argv) {
     phys::Object::Rect r3{w/2 + 50, h/2 - 40, 80, 80};
     phys::Object moderator(&m3, r3, sdl::Color::green());
 
+    phys::BasicMaterial m4{0, .02, 0, 0, 2};
+    phys::Object::Rect r4{w/2 - 20, h/2 + 50, 40, 40};
+    phys::Object fuel(&m4, r4, sdl::Color::purple());
+
     // create system and a view for drawing it
     phys::System sys(w, h);
     sys.AddObject(reflector);
     sys.AddObject(absorber);
     sys.AddObject(moderator);
+    sys.AddObject(fuel);
     draw::SysView view(&sys, &ren);
 
     // start up the main loop
@@ -71,8 +74,10 @@ int main(int argc, char** argv) {
           // create some neutrons
           phys::Neutron::Pop ns;
           for (int i = 0; i < 5000; ++i) {
-            int vx = 50; // uniform01(rand_gen) * 30 - 15;
-            int vy = 0; // uniform01(rand_gen) * 30 - 15;
+            double theta = uniform01(rand_gen) * 2 * 3.141592654;
+            double speed = 40;
+            int vx = std::cos(theta) * speed;
+            int vy = std::sin(theta) * speed;
             ns.push_back(phys::Neutron(ev.button.x, ev.button.y, vx, vy));
           }
           sys.AddNeutrons(ns);
@@ -85,14 +90,16 @@ int main(int argc, char** argv) {
           dragged->Shift(ev.motion.xrel, ev.motion.yrel);
         }
       }
-      
-      // calculate timing
-      double dt = (double)timer.Mark();
-      //std::cout << 1000 / dt << " fps, N = " << sys.neutrons().size() << "\n";
-      sys.Tick(dt / 1000);
 
-      // draw everything to the screen
-      view.Render();
+      // too small timesteps cause floating point problems with neutron rxn calc.
+      int since = timer.SinceMark();
+      if (since < 20) {
+        SDL_Delay(20 - since);
+      }
+      
+      double dt = (double)timer.Mark();
+      sys.Tick(dt / 1000);
+      view.Render(((double)1000) / dt);
     }
 
     return 0;

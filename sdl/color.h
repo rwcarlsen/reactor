@@ -25,6 +25,10 @@ class Color {
     return p;
   }
 
+  SDL_Color sdl() {
+    return SDL_Color{r, g, b, 0};
+  }
+
 #define COLOR(name, r, g, b) static Color name() {return Color(r, g, b, SDL_ALPHA_OPAQUE);}
 COLOR(black, 0, 0, 0);
 COLOR(white, 255, 255, 255);

@@ -27,6 +27,14 @@ class Surface {
     }
   };
 
+  Surface(SDL_Surface* surf) : surf_(surf) {
+    SDL_DisplayMode curr;
+    if (SDL_GetCurrentDisplayMode(0, &curr) != 0) {
+      throw FatalErr();
+    }
+    fmt_ = SDL_AllocFormat(curr.format);
+  };
+
   ~Surface() {
     SDL_FreeFormat(fmt_);
     SDL_FreeSurface(surf_);

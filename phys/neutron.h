@@ -7,6 +7,8 @@
 
 namespace phys {
 
+const double kPi = 3.141592653589793;
+
 class Neutron {
  public:
   typedef struct{double x; double y;} V;

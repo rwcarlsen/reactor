@@ -2,31 +2,40 @@
 #ifndef DRAW_NEUTRONS_H_
 #define DRAW_NEUTRONS_H_
 
+#include <sstream>
+
 #include "SDL2/SDL.h"
+#include "SDL2/SDL_ttf.h"
 
 #include "sdl/renderer.h"
 #include "sdl/color.h"
 #include "sdl/texture.h"
 #include "sdl/surface.h"
+#include "sdl/font.h"
 
 #include "phys/system.h"
 #include "phys/object.h"
 
 namespace draw {
 
+static const char* kFontPath = "/usr/share/fonts/TTF/DejaVuSerif-Bold.ttf";
+
 class SysView {
  public:
-  SysView(const phys::System* sys, sdl::Renderer* ren) : sys_(sys), ren_(ren) {
+  SysView(const phys::System* sys, sdl::Renderer* ren) : sys_(sys), ren_(ren),
+    font_(kFontPath) {
     bg_color_ = sdl::Color::black();
     neut_color_ = sdl::Color::red();
+    font_color_ = sdl::Color::yellow();
   };
 
-  void Render() {
+  void Render(double fps) {
     ren_->set_draw_color(bg_color_);
     ren_->Clear();
 
     DrawGeometry();
     DrawNeutrons();
+    DrawInfo(fps);
 
     ren_->Render();
   };
@@ -57,11 +66,27 @@ class SysView {
     ren_->DrawPoints(points, ns.size());
   };
 
+  void DrawInfo(double fps) {
+    std::stringstream ss;
+    ss << "FPS: " << (int)fps;
+    auto surf = font_.RenderBlended(ss.str().c_str(), font_color_);
+    sdl::Texture tex(*ren_, *surf.get());
+    tex.ApplyFull(10, 10);
+
+    std::stringstream ss2;
+    ss2 << "Neutrons: " << sys_->neutrons().size();
+    auto surf2 = font_.RenderBlended(ss2.str().c_str(), font_color_);
+    sdl::Texture tex2(*ren_, *surf2.get());
+    tex2.ApplyFull(10, 30);
+  }
+
   sdl::Color bg_color_;
   sdl::Color neut_color_;
+  sdl::Color font_color_;
 
   const phys::System* sys_;
   sdl::Renderer* ren_;
+  sdl::Font font_;
 };
 
 } // namespace draw

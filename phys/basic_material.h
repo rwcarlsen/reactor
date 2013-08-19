@@ -8,8 +8,6 @@
 
 namespace phys {
 
-const double kPi = 3.141592653589793;
-
 // all probabilities given per unit length
 class BasicMaterial : public Material {
  public:
@@ -35,8 +33,13 @@ class BasicMaterial : public Material {
 
   virtual Neutron::V scat_v(Neutron::V v, double speed) {
     double theta = uniform_(rand_gen_);
-    double vy = speed * std::sin(theta) * scat_frac;
-    double vx = speed * std::cos(theta) * scat_frac;
+    double vy = speed * std::sin(theta);
+    double vx = speed * std::cos(theta);
+
+    if (speed > 5) {
+      vx *= scat_frac;
+      vy *= scat_frac;
+    }
     return Neutron::V {vx, vy};
   };
 

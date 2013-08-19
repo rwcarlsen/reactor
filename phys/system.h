@@ -31,7 +31,8 @@ class System {
   };
 
   void Tick(double deltat) {
-    for (int i = 0; i < neutrons_.size(); ++i) {
+    int i = 0;
+    while (i < neutrons_.size()) {
       Neutron* n = &neutrons_[i];
       Object* obj = ObjectFor(n->x(), n->y());
       Material* m = obj->material();
@@ -40,7 +41,6 @@ class System {
       if (n->x() < 0 || n->y() < 0 || n->x() > width_ || n->y() > height_) {
         neutrons_[i] = neutrons_[neutrons_.size() - 1];
         neutrons_.pop_back();
-        i--;
         continue;
       }
 
@@ -48,30 +48,30 @@ class System {
       if (rxn == SCATTER) {
         n->set_v(m->scat_v(n->v(), n->speed()));
         n->Move(deltat);
+        ++i;
       } else if (rxn == ABSORB) {
         neutrons_[i] = neutrons_[neutrons_.size() - 1];
         neutrons_.pop_back();
-        i--;
       } else if (rxn == FISSION) {
-        neutrons_[i] = neutrons_[neutrons_.size() - 1];
-        neutrons_.pop_back();
-        i--;
-
         int yield = m->fiss_yield();
+        double x = n->x();
+        double y = n->y();
         for (int j = 0; j < yield; ++j) {
-          double x = n->x();
-          double y = n->y();
           V v = FissV();
           neutrons_.push_back(Neutron(x, y, v.x, v.y));
         }
+
+        neutrons_[i] = neutrons_[neutrons_.size() - 1];
+        neutrons_.pop_back();
       } else {
         n->Move(deltat);
+        ++i;
       }
     }
   };
 
   Object* ObjectFor(int x, int y) {
-    for (int i = 0; i < objs_.size(); ++i) {
+    for (int i = objs_.size() - 1; i >= 0; --i) {
       if (objs_[i].Contains(x, y)) {
         return &objs_[i];
       }
@@ -116,8 +116,10 @@ class System {
 
   V FissV() {
     V v;
-    v.x = poisson1_(rand_gen_) * 15;
-    v.y = poisson1_(rand_gen_) * 15;
+    double theta = uniform01_(rand_gen_) * 2 * kPi;
+    double speed = 30 * poisson1_(rand_gen_) + 5;
+    v.x = std::cos(theta) * speed;
+    v.y = std::sin(theta) * speed;
     return v;
   };
 
@@ -128,7 +130,7 @@ class System {
   int width_;
   int height_;
 
-  std::ranlux48_base rand_gen_;
+  std::minstd_rand rand_gen_;
   std::uniform_real_distribution<> uniform01_;
   std::poisson_distribution<> poisson1_;
 };

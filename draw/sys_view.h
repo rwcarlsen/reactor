@@ -19,7 +19,7 @@
 
 namespace draw {
 
-static const char* kFontPath = "/usr/share/fonts/TTF/DejaVuSerif-Bold.ttf";
+static const char* kFontPath = "/usr/share/fonts/TTF/Ubuntu-R.ttf";
 
 class SysView {
  public:

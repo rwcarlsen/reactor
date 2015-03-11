@@ -4,6 +4,7 @@
 
 #include <random>
 #include <vector>
+#include <list>
 
 #include "phys/material.h"
 #include "phys/object.h"
@@ -16,6 +17,7 @@ class System {
   System(int w, int h)
     : width_(w),
       height_(h),
+      prevn_(0),
     blank_(new Material(), Object::Rect {0, 0, 1, 1}) { };
 
   ~System() {
@@ -30,7 +32,21 @@ class System {
     neutrons_.insert(neutrons_.end(), ns.begin(), ns.end());
   };
 
+  double period() const {
+    return period_;
+  }
+
   void Tick(double deltat) {
+    cumdt_ += deltat;
+    if (cumdt_ > 1) {
+      double currn = neutrons_.size();
+      if (currn > 100 && prevn_ > 100 && currn != prevn_) {
+        period_ = cumdt_ / std::log(currn / prevn_);
+      }
+      cumdt_ = 0;
+      prevn_ = neutrons_.size();
+    }
+
     int i = 0;
     while (i < neutrons_.size()) {
       Neutron* n = &neutrons_[i];
@@ -136,6 +152,9 @@ class System {
   std::vector<Object*> objs_;
   Object blank_;
   Neutron::Pop neutrons_;
+  double prevn_;
+  double cumdt_;
+  double period_;
 
   int width_;
   int height_;

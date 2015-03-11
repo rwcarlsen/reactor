@@ -95,6 +95,12 @@ class SysView {
     auto surf2 = font_.RenderBlended(ss2.str().c_str(), font_color_);
     sdl::Texture tex2(*ren_, *surf2.get());
     tex2.ApplyFull(10, 30);
+
+    std::stringstream ss3;
+    ss3 << "Period: " << sys_->period();
+    auto surf3 = font_.RenderBlended(ss3.str().c_str(), font_color_);
+    sdl::Texture tex3(*ren_, *surf3.get());
+    tex3.ApplyFull(10, 50);
   }
 
   sdl::Color bg_color_;

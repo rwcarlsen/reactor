@@ -37,16 +37,6 @@ class System {
   }
 
   void Tick(double deltat) {
-    cumdt_ += deltat;
-    if (cumdt_ > 1) {
-      double currn = neutrons_.size();
-      if (currn > 100 && prevn_ > 100 && currn != prevn_) {
-        period_ = cumdt_ / std::log(currn / prevn_);
-      }
-      cumdt_ = 0;
-      prevn_ = neutrons_.size();
-    }
-
     int i = 0;
     while (i < neutrons_.size()) {
       Neutron* n = &neutrons_[i];
@@ -83,6 +73,17 @@ class System {
         n->Move(deltat);
         ++i;
       }
+    }
+
+    cumdt_ += deltat;
+    double window_sec = 2;
+    if (cumdt_ >= window_sec) {
+      double currn = neutrons_.size();
+      if (currn > 100 && prevn_ > 100 && currn != prevn_) {
+        period_ = cumdt_ / std::log(currn / prevn_);
+      }
+      cumdt_ = 0;
+      prevn_ = neutrons_.size();
     }
   };
 

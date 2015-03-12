@@ -146,7 +146,7 @@ int main(int argc, char** argv) {
     }
 
     return 0;
-  } catch (std::exception err) {
+  } catch (sdl::FatalErr err) {
     std::cout << "ERROR: " << err.what() << "\n";
     return 1;
   }

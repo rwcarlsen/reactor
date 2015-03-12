@@ -13,16 +13,22 @@ namespace sdl {
 
 class Font {
  public:
-  Font(std::string font_path) throw(FatalErr) : font_(nullptr) {
-    font_ = TTF_OpenFont(font_path.c_str(), 16);
-    if (font_ == nullptr) {
-      throw FatalErr(TTF_GetError());
-    }
+  Font() : font_(nullptr) {};
+
+  Font(std::string fontpath) throw(FatalErr) : font_(nullptr) {
+    Load(fontpath);
   };
 
   ~Font() {
     TTF_CloseFont(font_);
   };
+
+  void Load(std::string fontpath) {
+    font_ = TTF_OpenFont(fontpath.c_str(), 16);
+    if (font_ == nullptr) {
+      throw FatalErr(std::string("Failed to load font ") + fontpath + ": " + TTF_GetError());
+    }
+  }
 
   Font(const Font& what) = delete;
 

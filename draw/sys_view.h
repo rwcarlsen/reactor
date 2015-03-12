@@ -3,7 +3,9 @@
 #define DRAW_NEUTRONS_H_
 
 #include <sstream>
+#include <fstream>
 #include <iomanip>
+#include <sys/stat.h>
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_ttf.h"
@@ -21,10 +23,34 @@ namespace draw {
 
 static const char* kFontPath = "/usr/share/fonts/TTF/Ubuntu-R.ttf";
 
+bool fileExists(std::string fname) {
+  std::ifstream infile(fname);
+  return infile.good();
+}
+
+std::string env(std::string var) {
+  char* s = getenv(var.c_str());
+  if (s == NULL) {
+    return "";
+  }
+  return s;
+}
+
 class SysView {
  public:
-  SysView(const phys::System* sys, sdl::Renderer* ren) : sys_(sys), ren_(ren),
-    font_(kFontPath) {
+  SysView(const phys::System* sys, sdl::Renderer* ren) : sys_(sys), ren_(ren) {
+    std::string fontpath(env("REACTOR_FONT"));
+    if (fontpath == "") {
+      fontpath = "/usr/share/reactor/FreeMono.ttf";
+      if (!fileExists(fontpath)) {
+        fontpath = std::string(env("HOME")) + ".local/share/reactor/FreeMono.ttf";
+        if (!fileExists(fontpath)) {
+          fontpath = "./FreeMono.ttf";
+        }
+      }
+    }
+    font_.Load(fontpath);
+
     bg_color_ = sdl::Color::black();
     neut_color_ = sdl::Color::red();
     font_color_ = sdl::Color::yellow();

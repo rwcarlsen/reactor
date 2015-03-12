@@ -13,10 +13,10 @@
 
 #include "phys/system.h"
 #include "phys/basic_material.h"
+#include "phys/fuel_material.h"
+#include "phys/absorb_material.h"
 
 #include "draw/sys_view.h"
-
-#include "fuel.h"
 
 using sdl::Color;
 
@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
     phys::Object reflector3(reflector);
     phys::Object reflector4(reflector);
 
-    phys::BasicMaterial m2{.1, 0, 0, 1, 0};
+    phys::Absorber m2{.1};
     phys::Object::Rect r2{w/2 - 130, h/2 - 40, 80, 80};
     phys::Object absorber(&m2, r2, sdl::Color::blue());
     phys::Object absorber2(absorber);
@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
     phys::Object moderator3(moderator);
     phys::Object moderator4(moderator);
 
-    Fuel m4(0, 0.05, 2);
+    phys::Fuel m4(0, 0.05, 2);
     phys::Object::Rect r4{w/2 - 20, h/2 + 50, 40, 40};
     phys::Object fuel(&m4, r4, sdl::Color::purple());
     phys::Object fuel2(fuel);

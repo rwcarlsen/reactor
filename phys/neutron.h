@@ -10,6 +10,8 @@ namespace phys {
 
 static const double kPi = 3.141592653589793;
 
+enum Rxn {RxNothing, RxFission, RxAbsorb, RxScatter};
+
 class Neutron {
  public:
   typedef struct {

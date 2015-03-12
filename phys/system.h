@@ -6,9 +6,11 @@
 #include <vector>
 #include <list>
 
-#include "phys/material.h"
 #include "phys/object.h"
 #include "phys/neutron.h"
+
+#define SHOW(X) \
+  std::cout << __FILE__ << ":" << __LINE__ << ": "#X" = " << X << "\n"
 
 namespace phys {
 
@@ -18,11 +20,9 @@ class System {
     : width_(w),
       height_(h),
       prevn_(0),
-    blank_(new Material(), Object::Rect {0, 0, 1, 1}) { };
+    blank_(Object::Rect {0, 0, 1, 1}) { };
 
-  ~System() {
-    delete blank_.material();
-  };
+  ~System() { };
 
   void AddObject(Object* o) {
     objs_.push_back(o);
@@ -41,7 +41,6 @@ class System {
     while (i < neutrons_.size()) {
       Neutron* n = &neutrons_[i];
       Object* obj = ObjectFor(n->x(), n->y());
-      Material* m = obj->material();
 
       // remove out of bounds neutrons
       if (n->x() < 0 || n->y() < 0 || n->x() > width_ || n->y() > height_) {
@@ -50,16 +49,22 @@ class System {
         continue;
       }
 
-      Rxn rxn = SelectRxn(n, m, deltat);
-      if (rxn == SCATTER) {
-        n->set_v(m->scat_v(n->v(), n->speed()));
+      Rxn rxn = SelectRxn(n, obj, deltat);
+      if (!obj->React(rxn, n->x(), n->y())) {
         n->Move(deltat);
         ++i;
-      } else if (rxn == ABSORB) {
+        continue;
+      }
+
+      if (rxn == RxScatter) {
+        n->set_v(obj->scat_v(n->v(), n->speed()));
+        n->Move(deltat);
+        ++i;
+      } else if (rxn == RxAbsorb) {
         neutrons_[i] = neutrons_[neutrons_.size() - 1];
         neutrons_.pop_back();
-      } else if (rxn == FISSION) {
-        int yield = m->fiss_yield();
+      } else if (rxn == RxFission) {
+        int yield = obj->fiss_yield();
         double x = n->x();
         double y = n->y();
         for (int j = 0; j < yield; ++j) {
@@ -115,29 +120,28 @@ class System {
   };
 
  private:
-  enum Rxn {NOTHING, FISSION, ABSORB, SCATTER};
   struct V {
     double x;
     double y;
   };
 
-  Rxn SelectRxn(const Neutron* neut, Material* m, double deltat) {
+  Rxn SelectRxn(const Neutron* neut, Object* obj, double deltat) {
     double speed = neut->speed();
     double distance = speed * deltat;
-    double p_absorb = m->absorb_prob(speed) * distance;
-    double p_fiss = m->fiss_prob(speed) * distance;
-    double p_scatter = m->scatter_prob(speed) * distance;
+    double p_absorb = obj->absorb_prob(speed) * distance;
+    double p_fiss = obj->fiss_prob(speed) * distance;
+    double p_scatter = obj->scatter_prob(speed) * distance;
     double p_nothing = 1 - (p_scatter + p_fiss + p_absorb);
 
     double rn = uniform01_(rand_gen_);
     if (rn <= p_nothing) {
-      return NOTHING;
+      return RxNothing;
     } else if (rn <= p_nothing + p_scatter) {
-      return SCATTER;
+      return RxScatter;
     } else if (rn <= p_nothing + p_scatter + p_absorb) {
-      return ABSORB;
+      return RxAbsorb;
     } else {
-      return FISSION;
+      return RxFission;
     }
   };
 

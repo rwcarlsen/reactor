@@ -46,6 +46,14 @@ class Surface {
     return surf_;
   };
 
+  void DrawPoint(SDL_Point p, Color c) {
+    uint32_t pix = SDL_MapRGB(fmt_, c.r, c.g, c.b);
+    SDL_Rect r = {p.x, p.y, 1, 1};
+    if (SDL_FillRect(surf_, &r, pix) != 0) {
+      throw FatalErr();
+    }
+  }
+
   void FillRect(const SDL_Rect* rect, Color c) {
     uint32_t pix = SDL_MapRGB(fmt_, c.r, c.g, c.b);
     if (SDL_FillRect(surf_, rect, pix) != 0) {

@@ -4,12 +4,12 @@
 
 #include <math.h>
 
-#include "phys/material.h"
+#include "phys/object.h"
 
 namespace phys {
 
 // all probabilities given per unit length
-class BasicMaterial : public Material {
+class BasicMaterial : public Object {
  public:
   BasicMaterial(double pa, double pf, double ps, double sf, double y)
     : uniform_(0, 2 * kPi),
@@ -18,6 +18,16 @@ class BasicMaterial : public Material {
       p_scatter(ps),
       scat_frac(sf),
       yield(y) { };
+
+  BasicMaterial(const BasicMaterial* f) : Object(f) {
+    p_absorb = f->p_absorb;
+    p_fiss = f->p_fiss;
+    p_scatter = f->p_scatter;
+    scat_frac = f->scat_frac;
+    yield = f->yield;
+    rand_gen_ = f->rand_gen_;
+    uniform_ = f->uniform_;
+  }
 
   virtual double absorb_prob(double speed) {
     return p_absorb;

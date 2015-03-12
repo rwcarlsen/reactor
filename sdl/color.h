@@ -50,6 +50,8 @@ COLOR(teal, 0, 128, 128);
 COLOR(purple, 128, 0, 128);
 #undef COLOR
 
+static Color transparent() {return Color(0, 0, 0, SDL_ALPHA_TRANSPARENT);}
+
   uint8_t r, g, b, a;
 };
 

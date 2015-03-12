@@ -36,54 +36,54 @@ int main(int argc, char** argv) {
     sdl::Renderer ren(win, SDL_RENDERER_ACCELERATED);
 
     // create material geometry
-    phys::BasicMaterial m1{0, 0, .1, 1, 0};
+    phys::BasicMaterial reflector1{0, 0, .1, 1, 0};
     phys::Object::Rect r1{w/2 - 40, h/2 - 40, 120, 120};
-    phys::Object reflector(&m1, r1, sdl::Color::white());
-    phys::Object reflector2(reflector);
-    phys::Object reflector3(reflector);
-    phys::Object reflector4(reflector);
+    reflector1.Init(r1, sdl::Color::white());
+    phys::BasicMaterial reflector2(&reflector1);
+    phys::BasicMaterial reflector3(&reflector1);
+    phys::BasicMaterial reflector4(&reflector1);
 
-    phys::Absorber m2{.1};
+    phys::Absorber absorber1{.1};
     phys::Object::Rect r2{w/2 - 130, h/2 - 40, 80, 80};
-    phys::Object absorber(&m2, r2, sdl::Color::blue());
-    phys::Object absorber2(absorber);
-    phys::Object absorber3(absorber);
-    phys::Object absorber4(absorber);
+    absorber1.Init(r2, sdl::Color::blue());
+    phys::Absorber absorber2(&absorber1);
+    phys::Absorber absorber3(&absorber1);
+    phys::Absorber absorber4(&absorber1);
 
-    phys::BasicMaterial m3{0, 0, .03, .3, 0};
+    phys::BasicMaterial moderator1{0, 0, .03, .3, 0};
     phys::Object::Rect r3{w/2 + 50, h/2 - 40, 80, 80};
-    phys::Object moderator(&m3, r3, sdl::Color::green());
-    phys::Object moderator2(moderator);
-    phys::Object moderator3(moderator);
-    phys::Object moderator4(moderator);
+    moderator1.Init(r3, sdl::Color::green());
+    phys::BasicMaterial moderator2(&moderator1);
+    phys::BasicMaterial moderator3(&moderator1);
+    phys::BasicMaterial moderator4(&moderator1);
 
-    phys::Fuel m4(0, 0.05, 2);
+    phys::Fuel fuel1(0, 0.05, 2);
     phys::Object::Rect r4{w/2 - 20, h/2 + 50, 40, 40};
-    phys::Object fuel(&m4, r4, sdl::Color::purple());
-    phys::Object fuel2(fuel);
-    phys::Object fuel3(fuel);
-    phys::Object fuel4(fuel);
-    phys::Object fuel5(fuel);
-    phys::Object fuel6(fuel);
-    phys::Object fuel7(fuel);
-    phys::Object fuel8(fuel);
-    phys::Object fuel9(fuel);
+    fuel1.Init(r4, sdl::Color::purple());
+    phys::Fuel fuel2(&fuel1);
+    phys::Fuel fuel3(&fuel1);
+    phys::Fuel fuel4(&fuel1);
+    phys::Fuel fuel5(&fuel1);
+    phys::Fuel fuel6(&fuel1);
+    phys::Fuel fuel7(&fuel1);
+    phys::Fuel fuel8(&fuel1);
+    phys::Fuel fuel9(&fuel1);
 
     // create system and a view for drawing it
     phys::System sys(w, h);
-    sys.AddObject(&reflector);
+    sys.AddObject(&reflector1);
     sys.AddObject(&reflector2);
     sys.AddObject(&reflector3);
     sys.AddObject(&reflector4);
-    sys.AddObject(&absorber);
+    sys.AddObject(&absorber1);
     sys.AddObject(&absorber2);
     sys.AddObject(&absorber3);
     sys.AddObject(&absorber4);
-    sys.AddObject(&moderator);
+    sys.AddObject(&moderator1);
     sys.AddObject(&moderator2);
     sys.AddObject(&moderator3);
     sys.AddObject(&moderator4);
-    sys.AddObject(&fuel);
+    sys.AddObject(&fuel1);
     sys.AddObject(&fuel2);
     sys.AddObject(&fuel3);
     sys.AddObject(&fuel4);

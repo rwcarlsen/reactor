@@ -21,7 +21,34 @@ class Absorber : public Object {
     return Neutron::kMinSpeed / speed * p_absorb;
   };
 
+  virtual bool React(Rxn rx, double x, double y) {
+    int fuel_per_px = 50;
+    if (rx != RxAbsorb) {
+      return true;
+    }
 
+    Rect r = rect();
+    double relx = x - r.x;
+    double rely = y - r.y;
+    std::pair<int, int> p = std::make_pair((int)(relx), (int)(rely));
+    if (voids_[p] > fuel_per_px) {
+      return false;
+    }
+
+    if (voids_.count(p) == 0) {
+      voids_[p] = 0;
+    }
+
+    voids_[p]++;
+    if (voids_[p] > fuel_per_px) {
+      SDL_Point pt = {(int)relx, (int)rely};
+      surf_->DrawPoint(pt, sdl::Color::gray());
+    }
+
+    return true;
+  };
+
+  std::map<std::pair<int, int>, int > voids_;
   double p_absorb;
 };
 

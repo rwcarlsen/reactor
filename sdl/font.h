@@ -23,8 +23,8 @@ class Font {
     TTF_CloseFont(font_);
   };
 
-  void Load(std::string fontpath) {
-    font_ = TTF_OpenFont(fontpath.c_str(), 16);
+  void Load(std::string fontpath, int size = 16) {
+    font_ = TTF_OpenFont(fontpath.c_str(), size);
     if (font_ == nullptr) {
       throw FatalErr(std::string("Failed to load font ") + fontpath + ": " + TTF_GetError());
     }

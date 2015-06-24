@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
     phys::BasicMaterial moderator3(&moderator1);
     phys::BasicMaterial moderator4(&moderator1);
 
-    phys::Fuel fuel1(0, 0.05, 2);
+    phys::Fuel fuel1(0, 0.061, 2);
     phys::Object::Rect r4{w/2 - 20, h/2 + 50, 40, 40};
     fuel1.Init(r4, sdl::Color::purple());
     phys::Fuel fuel2(&fuel1);

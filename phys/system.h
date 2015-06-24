@@ -20,6 +20,7 @@ class System {
     : width_(w),
       height_(h),
       prevn_(0),
+      normal1_(Neutron::kNomSpeed, Neutron::kNomSpeed / 8.0),
     blank_(Object::Rect {0, 0, 1, 1}) { };
 
   ~System() { };
@@ -148,7 +149,7 @@ class System {
   V FissV() {
     V v;
     double theta = uniform01_(rand_gen_) * 2 * kPi;
-    double speed = Neutron::kNomSpeed * poisson1_(rand_gen_) + Neutron::kMinSpeed;
+    double speed = normal1_(rand_gen_);
     v.x = std::cos(theta) * speed;
     v.y = std::sin(theta) * speed;
     return v;
@@ -166,7 +167,7 @@ class System {
 
   std::minstd_rand rand_gen_;
   std::uniform_real_distribution<> uniform01_;
-  std::poisson_distribution<> poisson1_;
+  std::normal_distribution<> normal1_;
 };
 
 } // namespace phys

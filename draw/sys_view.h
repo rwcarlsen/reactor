@@ -81,16 +81,17 @@ class SysView {
 
   void DrawNeutrons() {
     const phys::Neutron::Pop ns = sys_->neutrons();
-    SDL_Point points[ns.size()];
+    SDL_Point* points = new SDL_Point[ns.size()];
     int i = 0;
     for (auto it = ns.begin(); it != ns.end(); ++it) {
-      i++;
       points[i].x = it->x();
       points[i].y = it->y();
+      i++;
     }
 
     ren_->set_draw_color(neut_color_);
     ren_->DrawPoints(points, ns.size());
+    delete[] points;
   };
 
   std::string FixedWidthInt(int v, int len) {

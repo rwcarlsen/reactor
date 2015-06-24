@@ -21,6 +21,8 @@
 
 using sdl::Color;
 
+const int neutron_burst = 5000;
+
 int main(int argc, char** argv) {
   std::ranlux48_base rand_gen;
   std::uniform_real_distribution<> uniform01;
@@ -115,7 +117,7 @@ int main(int argc, char** argv) {
         } else if (ev.type == SDL_MOUSEBUTTONDOWN && ev.button.button == SDL_BUTTON_RIGHT) {
           // create some neutrons
           phys::Neutron::Pop ns;
-          for (int i = 0; i < 5000; ++i) {
+          for (int i = 0; i < neutron_burst; ++i) {
             double theta = uniform01(rand_gen) * 2 * 3.141592654;
             int vx = std::cos(theta) * phys::Neutron::kNomSpeed;
             int vy = std::sin(theta) * phys::Neutron::kNomSpeed;

@@ -5,6 +5,7 @@
 #include <random>
 #include <vector>
 #include <list>
+#include <map>
 
 #include "phys/object.h"
 #include "phys/neutron.h"
@@ -39,9 +40,9 @@ class System {
 
   void Tick(double deltat) {
     int i = 0;
+    std::map<Object*, int> neut_counts;
     while (i < neutrons_.size()) {
       Neutron* n = &neutrons_[i];
-      Object* obj = ObjectFor(n->x(), n->y());
 
       // remove out of bounds neutrons
       if (n->x() < 0 || n->y() < 0 || n->x() > width_ || n->y() > height_) {
@@ -49,6 +50,9 @@ class System {
         neutrons_.pop_back();
         continue;
       }
+
+      Object* obj = ObjectFor(n->x(), n->y());
+      neut_counts[obj] += 1;
 
       Rxn rxn = SelectRxn(n, obj, deltat);
       if (!obj->React(rxn, n->x(), n->y())) {
@@ -90,6 +94,10 @@ class System {
       }
       cumdt_ = 0;
       prevn_ = neutrons_.size();
+    }
+
+    for (int i = 0; i < objs_.size(); i++) {
+      objs_[i]->num_neutrons(neut_counts[objs_[i]]);
     }
   };
 

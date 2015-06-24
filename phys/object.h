@@ -78,7 +78,11 @@ class Object {
     return 0;
   };
 
+  void num_neutrons(int n) { num_neutrons_ = n; };
+  int num_neutrons() { return num_neutrons_; };
+
  protected:
+  int num_neutrons_;
   Rect r_;
   sdl::Surface* surf_;
   sdl::Color color_;

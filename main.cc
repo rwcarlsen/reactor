@@ -14,6 +14,7 @@
 #include "phys/system.h"
 #include "phys/basic_material.h"
 #include "phys/fuel_material.h"
+#include "phys/moderator_material.h"
 #include "phys/absorb_material.h"
 
 #include "draw/sys_view.h"
@@ -57,6 +58,10 @@ int main(int argc, char** argv) {
     phys::BasicMaterial moderator3(&moderator1);
     phys::BasicMaterial moderator4(&moderator1);
 
+    phys::Moderator voidmoderator1(.03, .3, 200);
+    phys::Object::Rect r3b{w/2 + 130, h/2 - 40, 60, 60};
+    voidmoderator1.Init(r3b, sdl::Color::lime());
+
     phys::Fuel fuel1(0, 0.061, 2);
     phys::Object::Rect r4{w/2 - 20, h/2 + 50, 40, 40};
     fuel1.Init(r4, sdl::Color::purple());
@@ -83,6 +88,7 @@ int main(int argc, char** argv) {
     sys.AddObject(&moderator2);
     sys.AddObject(&moderator3);
     sys.AddObject(&moderator4);
+    sys.AddObject(&voidmoderator1);
     sys.AddObject(&fuel1);
     sys.AddObject(&fuel2);
     sys.AddObject(&fuel3);

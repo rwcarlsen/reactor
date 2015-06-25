@@ -13,6 +13,7 @@
 
 #include "phys/system.h"
 #include "phys/basic_material.h"
+#include "phys/detector.h"
 #include "phys/fuel_material.h"
 #include "phys/moderator_material.h"
 #include "phys/absorb_material.h"
@@ -76,6 +77,13 @@ int main(int argc, char** argv) {
     phys::Fuel fuel8(&fuel1);
     phys::Fuel fuel9(&fuel1);
 
+    phys::Object::Rect r5{w/2 + 130, h/2 + 40, 40, 40};
+    phys::Detector detector1;
+    detector1.Init(r5, sdl::Color::yellow());
+    phys::Detector detector2(&detector1);
+    phys::Detector detector3(&detector1);
+    phys::Detector detector4(&detector1);
+
     // create system and a view for drawing it
     phys::System sys(w, h);
     sys.AddObject(&reflector1);
@@ -100,6 +108,10 @@ int main(int argc, char** argv) {
     sys.AddObject(&fuel7);
     sys.AddObject(&fuel8);
     sys.AddObject(&fuel9);
+    sys.AddObject(&detector1);
+    sys.AddObject(&detector2);
+    sys.AddObject(&detector3);
+    sys.AddObject(&detector4);
     draw::SysView view(&sys, &ren);
 
     // start up the main loop

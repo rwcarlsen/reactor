@@ -3,6 +3,7 @@
 #define SURFACE_H_
 
 #include "SDL2/SDL.h"
+#include <memory>
 
 #include "sdl/color.h"
 #include "sdl/error.h"
@@ -46,6 +47,12 @@ class Surface {
     return surf_;
   };
 
+  void Blit(Surface* other, SDL_Rect* at) {
+    if ( SDL_BlitSurface(other->surf_, NULL, surf_, at) != 0) {
+      throw FatalErr();
+    }
+  };
+
   void DrawPoint(SDL_Point p, Color c) {
     uint32_t pix = SDL_MapRGB(fmt_, c.r, c.g, c.b);
     SDL_Rect r = {p.x, p.y, 1, 1};
@@ -65,6 +72,14 @@ class Surface {
     if (SDL_FillRect(surf_, rect, pix) != 0) {
       throw FatalErr();
     }
+  };
+
+  int width() {
+    return surf_->w;
+  };
+
+  int height() {
+    return surf_->h;
   };
 
  private:

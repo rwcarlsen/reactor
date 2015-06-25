@@ -15,8 +15,13 @@ class Font {
  public:
   Font() : font_(nullptr) {};
 
-  Font(std::string fontpath) throw(FatalErr) : font_(nullptr) {
+  Font(std::string fontpath) throw(FatalErr) : font_(nullptr), fontpath_(fontpath) {
     Load(fontpath);
+  };
+
+  Font(const Font* other) : font_(nullptr) {
+    fontpath_ = other->fontpath_;
+    Load(fontpath_);
   };
 
   ~Font() {
@@ -52,6 +57,7 @@ class Font {
 
  private:
   TTF_Font* font_;
+  std::string fontpath_;
 };
 
 } // namespace sdl

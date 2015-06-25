@@ -23,13 +23,18 @@ class Moderator : public BasicMaterial {
   }
 
   virtual double scatter_prob(double speed) {
-    double mult = expand_coeff_ / num_neutrons();
+    double mult = expand_coeff_ / num_neutrons_;
     mult = std::max(0.5, mult);
     mult = std::min(2.0, mult);
     return p_scatter * mult;
   };
 
+  virtual void tick_info(int deltat, int n_neutrons) {
+    num_neutrons_ = n_neutrons;
+  }
+
  private:
+  int num_neutrons_;
   double expand_coeff_;
 
 };

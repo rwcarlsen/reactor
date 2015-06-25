@@ -97,7 +97,7 @@ class System {
     }
 
     for (int i = 0; i < objs_.size(); i++) {
-      objs_[i]->num_neutrons(neut_counts[objs_[i]]);
+      objs_[i]->tick_info(deltat, neut_counts[objs_[i]]);
     }
   };
 

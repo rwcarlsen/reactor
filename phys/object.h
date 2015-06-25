@@ -13,9 +13,7 @@ namespace phys {
 
 class Object {
  public:
-  typedef struct {
-    int x, y, w, h;
-  } Rect;
+  typedef SDL_Rect Rect;
 
   Object() : surf_(nullptr) { };
   
@@ -46,7 +44,7 @@ class Object {
     return r_;
   }
 
-  sdl::Surface* surface() const {
+  virtual sdl::Surface* surface() {
     return surf_;
   }
 
@@ -78,11 +76,9 @@ class Object {
     return 0;
   };
 
-  void num_neutrons(int n) { num_neutrons_ = n; };
-  int num_neutrons() { return num_neutrons_; };
+  virtual void tick_info(double deltat, int num_neutrons) { };
 
  protected:
-  int num_neutrons_;
   Rect r_;
   sdl::Surface* surf_;
   sdl::Color color_;

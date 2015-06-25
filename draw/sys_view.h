@@ -21,6 +21,20 @@
 
 namespace draw {
 
+std::string FixedWidthInt(int v, int len) {
+  std::string fixed;
+  std::stringstream ss;
+  std::stringstream ssf;
+  ss << v;
+  if (ss.str().size() < len) {
+    for (int i = 0; i < len - ss.str().size(); ++i) {
+      ssf << "0";
+    }
+  }
+  ssf << ss.str();
+  return ssf.str();
+}
+
 static const char* kFontPath = "/usr/share/fonts/TTF/Ubuntu-R.ttf";
 
 bool fileExists(std::string fname) {
@@ -36,21 +50,25 @@ std::string env(std::string var) {
   return s;
 }
 
+void LoadFont(sdl::Font* font) {
+  std::string fontpath(env("REACTOR_FONT"));
+  if (fontpath == "") {
+    fontpath = "/usr/share/reactor/FreeMono.ttf";
+    if (!fileExists(fontpath)) {
+      fontpath = std::string(env("HOME")) + ".local/share/reactor/FreeMono.ttf";
+      if (!fileExists(fontpath)) {
+        fontpath = "./FreeMono.ttf";
+      }
+    }
+  }
+
+  font->Load(fontpath);
+}
+
 class SysView {
  public:
   SysView(const phys::System* sys, sdl::Renderer* ren) : sys_(sys), ren_(ren) {
-    std::string fontpath(env("REACTOR_FONT"));
-    if (fontpath == "") {
-      fontpath = "/usr/share/reactor/FreeMono.ttf";
-      if (!fileExists(fontpath)) {
-        fontpath = std::string(env("HOME")) + ".local/share/reactor/FreeMono.ttf";
-        if (!fileExists(fontpath)) {
-          fontpath = "./FreeMono.ttf";
-        }
-      }
-    }
-    font_.Load(fontpath);
-
+    LoadFont(&font_);
     bg_color_ = sdl::Color::black();
     neut_color_ = sdl::Color::red();
     font_color_ = sdl::Color::yellow();
@@ -93,20 +111,6 @@ class SysView {
     ren_->DrawPoints(points, ns.size());
     delete[] points;
   };
-
-  std::string FixedWidthInt(int v, int len) {
-    std::string fixed;
-    std::stringstream ss;
-    std::stringstream ssf;
-    ss << v;
-    if (ss.str().size() < len) {
-      for (int i = 0; i < len - ss.str().size(); ++i) {
-        ssf << "0";
-      }
-    }
-    ssf << ss.str();
-    return ssf.str();
-  }
 
   void DrawInfo(double fps) {
     std::string sfps = FixedWidthInt((int)fps, 4);

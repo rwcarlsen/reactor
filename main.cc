@@ -33,8 +33,8 @@ int main(int argc, char** argv) {
     sdl::SDLinit init(SDL_INIT_EVERYTHING);
 
     // create window and renderer
-    int w = 850;
-    int h = 650;
+    int w = 1700;
+    int h = 1300;
     sdl::Window win("Reactor", w, h, 0);
     win.Center();
     win.Show();

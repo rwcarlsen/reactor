@@ -62,7 +62,7 @@ void LoadFont(sdl::Font* font) {
     }
   }
 
-  font->Load(fontpath);
+  font->Load(fontpath, 32);
 }
 
 class SysView {
@@ -143,13 +143,13 @@ class SysView {
     ss2 << "Neutrons: " << nn;
     auto surf2 = font_.RenderBlended(ss2.str().c_str(), font_color_);
     sdl::Texture tex2(*ren_, *surf2.get());
-    tex2.ApplyFull(10, 30);
+    tex2.ApplyFull(10, 50);
 
     std::stringstream ss3;
     ss3 << "Period: " << sys_->period();
     auto surf3 = font_.RenderBlended(ss3.str().c_str(), font_color_);
     sdl::Texture tex3(*ren_, *surf3.get());
-    tex3.ApplyFull(10, 50);
+    tex3.ApplyFull(10, 90);
   }
 
   sdl::Color bg_color_;

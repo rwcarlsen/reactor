@@ -17,6 +17,7 @@
 #include "phys/fuel_material.h"
 #include "phys/moderator_material.h"
 #include "phys/absorb_material.h"
+#include "phys/stream_src.h"
 
 #include "draw/sys_view.h"
 
@@ -83,6 +84,10 @@ int main(int argc, char** argv) {
     phys::Detector detector2(&detector1);
     phys::Detector detector3(&detector1);
     phys::Detector detector4(&detector1);
+    
+    phys::StreamSource stream1();
+    phys::Object::Rect r6{w/2 + 130, h/2 - 40, 40, 40};
+    stream1.Init(r6, sdl::Color::olive());
 
     // create system and a view for drawing it
     phys::System sys(w, h);
@@ -112,6 +117,7 @@ int main(int argc, char** argv) {
     sys.AddObject(&detector2);
     sys.AddObject(&detector3);
     sys.AddObject(&detector4);
+    sys.AddObject(&stream1);
     draw::SysView view(&sys, &ren);
 
     // start up the main loop
@@ -121,12 +127,16 @@ int main(int argc, char** argv) {
     bool done = false;
     bool dragging = false;
     phys::Object* dragged = nullptr;
+    phys::Object* clicked = nullptr;
     while(!done) {
       // process events
       while(SDL_PollEvent(&ev)) {
         if (ev.type == SDL_QUIT) {
           done = true;
         } else if (ev.type == SDL_MOUSEBUTTONDOWN && ev.button.button == SDL_BUTTON_RIGHT) {
+          clicked = sys.ObjectFor(ev.button.x, ev.button.y);
+          if (clicked->OnClick(ev.button.x, ev.button.y))
+            continue;
           // create some neutrons
           phys::Neutron::Pop ns;
           for (int i = 0; i < neutron_burst; ++i) {

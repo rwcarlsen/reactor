@@ -76,7 +76,7 @@ class Object {
     return 0;
   };
 
-  virtual void tick_info(double deltat, int num_neutrons) { };
+  virtual void tick_info(double deltat, std::vector<Neutron*> neutrons) { };
 
  protected:
   Rect r_;

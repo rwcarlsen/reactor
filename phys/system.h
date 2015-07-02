@@ -40,7 +40,7 @@ class System {
 
   void Tick(double deltat) {
     int i = 0;
-    std::map<Object*, int> neut_counts;
+    std::map<Object*, std::vector<Neutron*> > neuts;
     while (i < neutrons_.size()) {
       Neutron* n = &neutrons_[i];
 
@@ -52,7 +52,7 @@ class System {
       }
 
       Object* obj = ObjectFor(n->x(), n->y());
-      neut_counts[obj] += 1;
+      neuts[obj].push_back(n);
 
       Rxn rxn = SelectRxn(n, obj, deltat);
       if (!obj->React(rxn, n->x(), n->y())) {
@@ -97,7 +97,7 @@ class System {
     }
 
     for (int i = 0; i < objs_.size(); i++) {
-      objs_[i]->tick_info(deltat, neut_counts[objs_[i]]);
+      objs_[i]->tick_info(deltat, neuts[objs_[i]]);
     }
   };
 

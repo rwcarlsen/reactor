@@ -51,8 +51,13 @@ class System {
         continue;
       }
 
-      Object* obj = ObjectFor(n->x(), n->y());
+      Object* obj = MaterialFor(n->x(), n->y());
       neuts[obj].push_back(n);
+
+      std::vector<Object*> dets = DetectorsFor(n->x(), n->y());
+      for (auto det : dets) {
+        neuts[det].push_back(n);
+      }
 
       Rxn rxn = SelectRxn(n, obj, deltat);
       if (!obj->React(rxn, n->x(), n->y())) {
@@ -118,6 +123,25 @@ class System {
       }
     }
     return &blank_;
+  }
+
+  Object* MaterialFor(int x, int y) {
+    for (int i = objs_.size() - 1; i >= 0; --i) {
+      if (objs_[i]->Contains(x, y) && !objs_[i]->detector()) {
+        return objs_[i];
+      }
+    }
+    return &blank_;
+  }
+
+  std::vector<Object*> DetectorsFor(int x, int y) {
+    std::vector<Object*> dets;
+    for (int i = objs_.size() - 1; i >= 0; --i) {
+      if (objs_[i]->Contains(x, y) && objs_[i]->detector()) {
+        dets.push_back(objs_[i]);
+      }
+    }
+    return dets;
   }
 
   const Neutron::Pop neutrons() const {

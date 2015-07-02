@@ -15,13 +15,14 @@ class Object {
  public:
   typedef SDL_Rect Rect;
 
-  Object() : surf_(nullptr) { };
+  Object() : surf_(nullptr), detector_(false) { };
   
-  Object(Rect bounds, sdl::Color c = sdl::Color::white()) {
+  Object(Rect bounds, sdl::Color c = sdl::Color::white()) : detector_(false) {
     Init(bounds, c);
   };
 
   Object(const Object* obj) {
+    detector_ = obj->detector_;
     r_ = obj->r_;
     color_ = obj->color_;
     surf_ = new sdl::Surface(r_.w, r_.h);
@@ -53,6 +54,8 @@ class Object {
     r_.y += dy;
   };
 
+  bool detector() { return detector_; };
+
   //////////// material properties ////////////
   virtual double absorb_prob(double speed) {
     return 0;
@@ -79,6 +82,7 @@ class Object {
   virtual void tick_info(double deltat, std::vector<Neutron*> neutrons) { };
 
  protected:
+  bool detector_;
   Rect r_;
   sdl::Surface* surf_;
   sdl::Color color_;

@@ -12,10 +12,12 @@ namespace phys {
 class Detector : public Object {
  public:
   Detector() : prev_n_(0), curr_n_(0), deltat_(1) {
+    detector_ = true;
     draw::LoadFont(&font_);
   };
 
   Detector(const Detector* f) : Object(f) {
+    detector_ = true;
     draw::LoadFont(&font_);
     prev_n_ = f->prev_n_;
     curr_n_ = f->curr_n_;

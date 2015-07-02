@@ -1,5 +1,5 @@
-#ifndef DETECTOR_H_
-#define DETECTOR_H_
+#ifndef STREAM_SRC_H_
+#define STREAM_SRC_H_
 
 #include <map>
 #include <set>
@@ -40,23 +40,23 @@ class StreamSource : public Object {
     int x, y;
     switch (d) {
       case N:
-        x = (int)(r.x + frac * w);
+        x = (int)(r.x + frac * r.w);
         y = r.y;
         break;
         
       case S:
-        x = (int)(r.x + frac * w);
-        y = r.y - h;
+        x = (int)(r.x + frac * r.w);
+        y = r.y - r.h;
         break;
         
       case E:
-        x = r.x - w;
-        y = (int)(r.y + frac * h);
+        x = r.x - r.w;
+        y = (int)(r.y + frac * r.h);
         break;
 
       case W:
         x = r.x;
-        y = (int)(r.y + frac * h);
+        y = (int)(r.y + frac * r.h);
         break;
     }
     return std::make_pair(x, y);
@@ -92,11 +92,11 @@ class StreamSource : public Object {
   void Stream() {
     int n = kNPS;
     std::set<Dir>::iterator it;
-    for (it = streaming_.begin(); it != streaming.end(); ++it) {
+    for (it = streaming_.begin(); it != streaming_.end(); ++it) {
       phys::Neutron::Pop ns;
-      std::pair<int, int> speed = Speed(d);
+      std::pair<int, int> speed = Speed(*it);
       for (int i = 0; i < n; ++i) {
-        std::pair<int, int> coords = Coords(d, i, n);
+        std::pair<int, int> coords = Coords(*it, i, n);
         ns.push_back(phys::Neutron(coords.first, coords.second, speed.first, speed.second));
       }
       sys.AddNeutrons(ns);

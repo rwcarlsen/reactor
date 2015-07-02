@@ -79,7 +79,7 @@ int main(int argc, char** argv) {
 
     phys::Object::Rect r5{w/2 + 130, h/2 + 40, 40, 40};
     phys::Detector detector1;
-    detector1.Init(r5, sdl::Color::yellow());
+    detector1.Init(r5, sdl::Color::yellow(128));
     phys::Detector detector2(&detector1);
     phys::Detector detector3(&detector1);
     phys::Detector detector4(&detector1);

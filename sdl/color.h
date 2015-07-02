@@ -20,18 +20,16 @@ class Color {
       throw sdl::FatalErr();
     }
     SDL_PixelFormat* fmt = SDL_AllocFormat(curr.format);
-    Color red = Color::red();
-    Color blk = Color::black();
-    uint32_t p =  SDL_MapRGB(fmt, r, g, b);
+    uint32_t p =  SDL_MapRGBA(fmt, r, g, b, a);
     SDL_FreeFormat(fmt);
     return p;
   }
 
   SDL_Color sdl() {
-    return SDL_Color{r, g, b, 0};
+    return SDL_Color{r, g, b, a};
   }
 
-#define COLOR(name, r, g, b) static Color name() {return Color(r, g, b, SDL_ALPHA_OPAQUE);}
+#define COLOR(name, r, g, b) static Color name(int alpha=SDL_ALPHA_OPAQUE) {return Color(r, g, b, alpha);};
 COLOR(black, 0, 0, 0);
 COLOR(white, 255, 255, 255);
 COLOR(gray, 128, 128, 128);

@@ -24,12 +24,18 @@ class Texture {
 
     tex_ = SDL_CreateTextureFromSurface(ren_, bmp);
 
+
     SDL_FreeSurface(bmp);
   };
 
   Texture(const Renderer& ren, const Surface& surf) {
     ren_ = ren.raw();
     tex_ = SDL_CreateTextureFromSurface(ren_, surf.raw());
+    SDL_BlendMode mode;
+    int status = SDL_SetTextureBlendMode(tex_, SDL_BLENDMODE_BLEND);
+    if (status != 0) {
+      throw FatalErr();
+    }
   };
 
   ~Texture() {

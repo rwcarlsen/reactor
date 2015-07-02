@@ -77,12 +77,15 @@ int main(int argc, char** argv) {
     phys::Fuel fuel8(&fuel1);
     phys::Fuel fuel9(&fuel1);
 
-    phys::Object::Rect r5{w/2 + 130, h/2 + 40, 40, 40};
+    phys::Object::Rect r5{w/2 + 130, h/2 + 140, 100, 100};
     phys::Detector detector1;
-    detector1.Init(r5, sdl::Color::yellow());
+    detector1.Init(r5, sdl::Color::yellow(128));
     phys::Detector detector2(&detector1);
-    phys::Detector detector3(&detector1);
-    phys::Detector detector4(&detector1);
+
+    phys::Object::Rect r6{w/2 + 80, h/2 + 80, 50, 50};
+    phys::Detector detector3;
+    detector3.Init(r6, sdl::Color::yellow(128));
+    phys::Detector detector4(&detector3);
 
     // create system and a view for drawing it
     phys::System sys(w, h);

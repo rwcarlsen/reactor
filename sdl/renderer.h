@@ -17,6 +17,12 @@ class Renderer {
     if (ren_ == nullptr) {
       throw FatalErr();
     }
+
+    SDL_BlendMode mode;
+    int status = SDL_SetRenderDrawBlendMode(ren_, SDL_BLENDMODE_BLEND);
+    if (status != 0) {
+      throw FatalErr();
+    }
   };
 
   ~Renderer() {

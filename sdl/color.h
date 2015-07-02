@@ -6,6 +6,18 @@
 
 #include "error.h"
 
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    const Uint32 R_MASK = 0xff000000;
+    const Uint32 G_MASK = 0x00ff0000;
+    const Uint32 B_MASK = 0x0000ff00;
+    const Uint32 A_MASK = 0x000000ff;
+#else
+    const Uint32 R_MASK = 0x000000ff;
+    const Uint32 G_MASK = 0x0000ff00;
+    const Uint32 B_MASK = 0x00ff0000;
+    const Uint32 A_MASK = 0xff000000;
+#endif
+
 namespace sdl {
 
 class Color {
@@ -14,24 +26,11 @@ class Color {
 
   Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) : r(r), g(g), b(b), a(a) { };
 
-  uint32_t pix() {
-    SDL_DisplayMode curr;
-    if (SDL_GetCurrentDisplayMode(0, &curr) != 0) {
-      throw sdl::FatalErr();
-    }
-    SDL_PixelFormat* fmt = SDL_AllocFormat(curr.format);
-    Color red = Color::red();
-    Color blk = Color::black();
-    uint32_t p =  SDL_MapRGB(fmt, r, g, b);
-    SDL_FreeFormat(fmt);
-    return p;
-  }
-
   SDL_Color sdl() {
-    return SDL_Color{r, g, b, 0};
+    return SDL_Color{r, g, b, a};
   }
 
-#define COLOR(name, r, g, b) static Color name() {return Color(r, g, b, SDL_ALPHA_OPAQUE);}
+#define COLOR(name, r, g, b) static Color name(int alpha=SDL_ALPHA_OPAQUE) {return Color(r, g, b, alpha);};
 COLOR(black, 0, 0, 0);
 COLOR(white, 255, 255, 255);
 COLOR(gray, 128, 128, 128);

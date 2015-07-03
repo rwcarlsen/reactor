@@ -40,7 +40,7 @@ class Object {
     return (x >= r_.x) && (x < r_.x + r_.w) &&
            (y >= r_.y) && (y < r_.y + r_.h);
   };
-
+  
   Rect rect() {
     return r_;
   }
@@ -55,6 +55,10 @@ class Object {
   };
 
   bool detector() { return detector_; };
+
+  virtual bool OnClick(int x, int y) {
+    return false; // derived classes return true if no burst wanted
+  }
 
   //////////// material properties ////////////
   virtual double absorb_prob(double speed) {

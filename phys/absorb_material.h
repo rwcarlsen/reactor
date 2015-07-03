@@ -22,7 +22,7 @@ class Absorber : public Object {
   };
 
   virtual bool React(Rxn rx, double x, double y) {
-    int fuel_per_px = 50;
+    int fuel_per_px = 25;
     if (rx != RxAbsorb) {
       return true;
     }

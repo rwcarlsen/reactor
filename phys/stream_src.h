@@ -47,7 +47,7 @@ class StreamSource : public Object {
 
   std::pair<int, int> Coords(Dir d, int step, int total) {
     Rect r = rect();
-    double beamfrac = 0.5;
+    double beamfrac = 0.25;
     double beamw = beamfrac * r.w;
     double beamh = beamfrac * r.h;
     double frac  = (double)step / total;

@@ -78,18 +78,36 @@ class SysView {
     ren_->set_draw_color(bg_color_);
     ren_->Clear();
 
-    DrawGeometry();
+    DrawMaterials();
     DrawNeutrons();
+    DrawDetectors();
     DrawInfo(fps);
 
     ren_->Render();
   };
 
  private:
-  void DrawGeometry() {
+  void DrawMaterials() {
     const std::vector<phys::Object*> objs = sys_->objects();
     for (int i = 0; i < objs.size(); ++i) {
       phys::Object* obj = objs[i];
+      if (obj->detector()) {
+        continue;
+      }
+      sdl::Surface* surf = obj->surface();
+      phys::Object::Rect r = obj->rect();
+      sdl::Texture tex(*ren_, *surf);
+      tex.ApplyFull(r.x, r.y);
+    }
+  };
+
+  void DrawDetectors() {
+    const std::vector<phys::Object*> objs = sys_->objects();
+    for (int i = 0; i < objs.size(); ++i) {
+      phys::Object* obj = objs[i];
+      if (!obj->detector()) {
+        continue;
+      }
       sdl::Surface* surf = obj->surface();
       phys::Object::Rect r = obj->rect();
       sdl::Texture tex(*ren_, *surf);

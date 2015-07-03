@@ -9,7 +9,7 @@
 
 namespace phys {
 
-static const double kNPS = 5e3;
+static const double kNPS = 2e4;
 
 enum Dir {N, S, E, W};
 
@@ -101,7 +101,7 @@ class StreamSource : public Object {
   }
   
   void Stream() {
-    int n = kNPS;
+    int n = (int) kNPS * deltat_;
     std::set<Dir>::iterator it;
     for (it = streaming_.begin(); it != streaming_.end(); ++it) {
       phys::Neutron::Pop ns;

@@ -85,7 +85,7 @@ int main(int argc, char** argv) {
     phys::Detector detector3(&detector1);
     phys::Detector detector4(&detector1);
     
-    phys::StreamSource stream1();
+    phys::StreamSource stream1;
     phys::Object::Rect r6{w/2 + 130, h/2 - 40, 40, 40};
     stream1.Init(r6, sdl::Color::olive());
 
@@ -118,6 +118,7 @@ int main(int argc, char** argv) {
     sys.AddObject(&detector3);
     sys.AddObject(&detector4);
     sys.AddObject(&stream1);
+    stream1.sys(&sys);
     draw::SysView view(&sys, &ren);
 
     // start up the main loop
@@ -133,7 +134,8 @@ int main(int argc, char** argv) {
       while(SDL_PollEvent(&ev)) {
         if (ev.type == SDL_QUIT) {
           done = true;
-        } else if (ev.type == SDL_MOUSEBUTTONDOWN && ev.button.button == SDL_BUTTON_RIGHT) {
+        } else if (ev.type == SDL_MOUSEBUTTONDOWN &&
+                   ev.button.button == SDL_BUTTON_RIGHT) {
           clicked = sys.ObjectFor(ev.button.x, ev.button.y);
           if (clicked->OnClick(ev.button.x, ev.button.y))
             continue;

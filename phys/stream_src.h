@@ -5,6 +5,7 @@
 #include <set>
 
 #include "phys/object.h"
+#include "phys/system.h"
 
 namespace phys {
 
@@ -21,7 +22,17 @@ class StreamSource : public Object {
   }
 
   Dir dir(int x, int y) {
-    return E;
+    Rect r = rect();
+    bool down_left = y - r.y > (r.h / r.w) * (x - r.x);
+    bool up_left = y - (r.y +r.h) < -(r.h / r.w) * (x - r.x);
+    if (down_left && up_left)
+      return W;
+    if (down_left && !up_left)
+      return S;
+    if (!down_left && up_left)
+      return N;
+    if (!down_left && !up_left)
+      return E;
   }
 
   virtual bool OnClick(int x, int y) {
@@ -46,11 +57,11 @@ class StreamSource : public Object {
         
       case S:
         x = (int)(r.x + frac * r.w);
-        y = r.y - r.h;
+        y = r.y + r.h;
         break;
         
       case E:
-        x = r.x - r.w;
+        x = r.x + r.w;
         y = (int)(r.y + frac * r.h);
         break;
 
@@ -68,12 +79,12 @@ class StreamSource : public Object {
     switch (d) {
       case N:
         vx = 0;
-        vy = nom;
+        vy = -nom;
         break;
         
       case S:
         vx = 0;
-        vy = -nom;
+        vy = nom;
         break;
         
       case E:
@@ -97,11 +108,14 @@ class StreamSource : public Object {
       std::pair<int, int> speed = Speed(*it);
       for (int i = 0; i < n; ++i) {
         std::pair<int, int> coords = Coords(*it, i, n);
-        ns.push_back(phys::Neutron(coords.first, coords.second, speed.first, speed.second));
+        ns.push_back(phys::Neutron(coords.first, coords.second,
+                                   speed.first, speed.second));
       }
-      sys.AddNeutrons(ns);
+      sys_->AddNeutrons(ns);
     }
   }
+
+  void sys(phys::System* s) { sys_ = s; }
   
   virtual void tick_info(double deltat, int n_neutrons) {
     deltat_ = deltat;
@@ -109,6 +123,7 @@ class StreamSource : public Object {
   }
 
  private:
+  phys::System* sys_;
   std::set<Dir> streaming_;
   double deltat_;
 };

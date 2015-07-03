@@ -148,7 +148,8 @@ int main(int argc, char** argv) {
             ns.push_back(phys::Neutron(ev.button.x, ev.button.y, vx, vy));
           }
           sys.AddNeutrons(ns);
-        } else if (ev.type == SDL_MOUSEBUTTONDOWN && ev.button.button == SDL_BUTTON_LEFT) {
+        } else if (ev.type == SDL_MOUSEBUTTONDOWN &&
+                   ev.button.button == SDL_BUTTON_LEFT) {
           dragged = sys.ObjectFor(ev.button.x, ev.button.y);
           sys.MoveTop(dragged);
           dragging = true;

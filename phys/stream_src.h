@@ -117,7 +117,7 @@ class StreamSource : public Object {
 
   void sys(phys::System* s) { sys_ = s; }
   
-  virtual void tick_info(double deltat, int n_neutrons) {
+  virtual void tick_info(double deltat, std::vector<Neutron*> neutrons) {
     deltat_ = deltat;
     Stream();
   }

@@ -17,21 +17,6 @@ class Window {
     if (win_ == nullptr) {
       throw FatalErr();
     }
-    //std::cout << "pixformat=" << SDL_GetPixelFormatName(SDL_GetWindowPixelFormat(win_)) << "\n"; 
-    //SDL_DisplayMode mode;
-    //int status = SDL_GetWindowDisplayMode(win_, &mode);
-    //if (status != 0) {
-    //  throw FatalErr();
-    //}
-    //std::cout << "spot1\n";
-    //mode.format = SDL_PIXELFORMAT_RGBA8888;
-    //std::cout << "spot2\n";
-    //status = SDL_SetWindowDisplayMode(win_, &mode);
-    //std::cout << "spot3\n";
-    //if (status != 0) {
-    //  throw FatalErr();
-    //}
-    //std::cout << "spot4\n";
   };
 
   ~Window() {

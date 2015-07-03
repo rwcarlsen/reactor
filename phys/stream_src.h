@@ -9,7 +9,7 @@
 
 namespace phys {
 
-static const double kNPS = 2e4;
+static const double kNPS = 3e3;
 
 enum Dir {N, S, E, W};
 
@@ -47,27 +47,30 @@ class StreamSource : public Object {
 
   std::pair<int, int> Coords(Dir d, int step, int total) {
     Rect r = rect();
+    double beamfrac = 0.5;
+    double beamw = beamfrac * r.w;
+    double beamh = beamfrac * r.h;
     double frac  = (double)step / total;
     int x, y;
     switch (d) {
       case N:
-        x = (int)(r.x + frac * r.w);
+        x = (int)(r.x + 0.5 * (r.w - beamw) + frac * beamw);
         y = r.y;
         break;
         
       case S:
-        x = (int)(r.x + frac * r.w);
+        x = (int)(r.x + 0.5 * (r.w - beamw) + frac * beamw);
         y = r.y + r.h;
         break;
         
       case E:
         x = r.x + r.w;
-        y = (int)(r.y + frac * r.h);
+        y = (int)(r.y + 0.5 * (r.h - beamh) + frac * beamh);
         break;
 
       case W:
         x = r.x;
-        y = (int)(r.y + frac * r.h);
+        y = (int)(r.y + 0.5 * (r.h - beamh) + frac * beamh);
         break;
     }
     return std::make_pair(x, y);

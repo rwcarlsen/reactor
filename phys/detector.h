@@ -30,6 +30,7 @@ class Detector : public Object {
     ss << n_inside;
 
     surf_->FillRect(NULL, sdl::Color::yellow(128));
+
     auto fontsurf = font_.RenderBlended(ss.str().c_str(), sdl::Color::black());
 
     int x = (surf_->width() - fontsurf->width()) / 2;

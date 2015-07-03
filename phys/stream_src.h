@@ -31,8 +31,8 @@ class StreamSource : public Object {
       return S;
     if (!down_left && up_left)
       return N;
-    if (!down_left && !up_left)
-      return E;
+    // else (!down_left && !up_left)
+    return E;
   }
 
   virtual bool OnClick(int x, int y) {

@@ -83,7 +83,7 @@ class Object {
     return 0;
   };
 
-  virtual void tick_info(double deltat, std::vector<Neutron*> neutrons) { };
+  virtual void tick_info(double deltat, std::vector<Neutron*> neutrons, double neutron_weight) { };
 
  protected:
   bool detector_;

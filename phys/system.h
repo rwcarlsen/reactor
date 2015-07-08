@@ -20,6 +20,7 @@ class System {
   System(int w, int h)
     : width_(w),
       height_(h),
+      neutron_weight_(1),
       prevn_(0),
       normal1_(Neutron::kNomSpeed, Neutron::kNomSpeed / 8.0),
     blank_(Object::Rect {0, 0, 1, 1}) { };
@@ -39,6 +40,37 @@ class System {
   }
 
   void Tick(double deltat) {
+    // roulette off neutrons if we have too many
+    double dtmax = 0.03;
+    if (deltat > dtmax) {
+      double pkill = (deltat - dtmax) / deltat;
+      int nkill = 0;
+      int i = 0;
+      while (i < neutrons_.size()) {
+        double r = uniform01_(rand_gen_);
+        if (r < pkill) {
+          nkill++;
+          neutrons_[i] = neutrons_[neutrons_.size() - 1];
+          neutrons_.pop_back();
+        } else {
+          i++;
+        }
+      }
+
+      neutron_weight_ *= (double)(neutrons_.size() + nkill) / (double)neutrons_.size();
+    } else if (deltat < dtmax && neutron_weight_ > 1) {
+      double pdup = (dtmax - deltat) / deltat;
+      int norig = neutrons_.size();
+      for (int i = 0; i < norig; i++) {
+        double r = uniform01_(rand_gen_);
+        if (r < pdup) {
+          neutrons_.push_back(phys::Neutron(neutrons_[i]));
+        }
+      }
+      neutron_weight_ *= (double)norig / (double)neutrons_.size();
+      neutron_weight_ = std::max(1.0, neutron_weight_);
+    }
+
     int i = 0;
     std::map<Object*, std::vector<Neutron*> > neuts;
     while (i < neutrons_.size()) {
@@ -102,7 +134,7 @@ class System {
     }
 
     for (int i = 0; i < objs_.size(); i++) {
-      objs_[i]->tick_info(deltat, neuts[objs_[i]]);
+      objs_[i]->tick_info(deltat, neuts[objs_[i]], neutron_weight_);
     }
   };
 
@@ -147,6 +179,10 @@ class System {
   const Neutron::Pop neutrons() const {
     return neutrons_;
   };
+
+  double neutron_weight() const { return neutron_weight_; }
+
+  double power() const { return neutron_weight_ * neutrons_.size(); }
 
   const std::vector<Object*>& objects() const {
     return objs_;
@@ -193,6 +229,7 @@ class System {
   double prevn_;
   double cumdt_;
   double period_;
+  double neutron_weight_;
 
   int width_;
   int height_;

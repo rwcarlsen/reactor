@@ -138,18 +138,25 @@ class SysView {
     sdl::Texture tex(*ren_, *surf.get());
     tex.ApplyFull(10, 10);
 
+    std::string pow = FixedWidthInt(sys_->power(), 7);
+    std::stringstream ss4;
+    ss4 << "Power: " << pow;
+    auto surf4 = font_.RenderBlended(ss4.str().c_str(), font_color_);
+    sdl::Texture tex4(*ren_, *surf4.get());
+    tex4.ApplyFull(10, 50);
+
     std::string nn = FixedWidthInt(sys_->neutrons().size(), 7);
     std::stringstream ss2;
     ss2 << "Neutrons: " << nn;
     auto surf2 = font_.RenderBlended(ss2.str().c_str(), font_color_);
     sdl::Texture tex2(*ren_, *surf2.get());
-    tex2.ApplyFull(10, 50);
+    tex2.ApplyFull(10, 90);
 
     std::stringstream ss3;
     ss3 << "Period: " << sys_->period();
     auto surf3 = font_.RenderBlended(ss3.str().c_str(), font_color_);
     sdl::Texture tex3(*ren_, *surf3.get());
-    tex3.ApplyFull(10, 90);
+    tex3.ApplyFull(10, 130);
   }
 
   sdl::Color bg_color_;

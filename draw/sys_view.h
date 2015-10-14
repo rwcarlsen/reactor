@@ -76,7 +76,8 @@ class SysView {
         ren_(ren) {
     LoadFont(&font_);
     bg_color_ = sdl::Color::black();
-    neut_color_ = sdl::Color::red();
+    slow_neut_color_ = sdl::Color::red();
+    fast_neut_color_ = sdl::Color::lilac();
     font_color_ = sdl::Color::yellow();
   };
 
@@ -123,17 +124,29 @@ class SysView {
 
   void DrawNeutrons() {
     const phys::Neutron::Pop ns = sys_->neutrons();
-    SDL_Point* points = new SDL_Point[ns.size()];
-    int i = 0;
+    SDL_Point* fast_points = new SDL_Point[ns.size()];
+    SDL_Point* slow_points = new SDL_Point[ns.size()];
+
+    int nfast = 0;
+    int nslow = 0;
     for (auto it = ns.begin(); it != ns.end(); ++it) {
-      points[i].x = it->x();
-      points[i].y = it->y();
-      i++;
+      if (it->speed() > 0.5 * phys::Neutron::kNomSpeed) {
+        fast_points[nfast].x = it->x();
+        fast_points[nfast].y = it->y();
+        nfast++;
+      } else {
+        slow_points[nslow].x = it->x();
+        slow_points[nslow].y = it->y();
+        nslow++;
+      }
     }
 
-    ren_->set_draw_color(neut_color_);
-    ren_->DrawPoints(points, ns.size());
-    delete[] points;
+    ren_->set_draw_color(fast_neut_color_);
+    ren_->DrawPoints(fast_points, nfast);
+    ren_->set_draw_color(slow_neut_color_);
+    ren_->DrawPoints(slow_points, nslow);
+    delete[] fast_points;
+    delete[] slow_points;
   };
 
   void DrawInfo(double fps) {
@@ -184,7 +197,8 @@ class SysView {
   int fps_;
 
   sdl::Color bg_color_;
-  sdl::Color neut_color_;
+  sdl::Color fast_neut_color_;
+  sdl::Color slow_neut_color_;
   sdl::Color font_color_;
 
   const phys::System* sys_;

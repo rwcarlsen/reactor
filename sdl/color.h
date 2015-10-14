@@ -47,6 +47,7 @@ COLOR(navy, 0, 0, 128);
 COLOR(olive, 128, 128, 0);
 COLOR(teal, 0, 128, 128);
 COLOR(purple, 128, 0, 128);
+COLOR(lilac, 139, 139, 216);
 #undef COLOR
 
 static Color transparent() {return Color(0, 0, 0, SDL_ALPHA_TRANSPARENT);}

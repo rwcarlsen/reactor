@@ -30,7 +30,7 @@ class Fuel : public Object {
   };
 
   virtual bool React(Rxn rx, double x, double y) {
-    int fuel_per_px = 100;
+    int fuel_per_px = 10000;
     if (rx != RxFission) {
       return true;
     }

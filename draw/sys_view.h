@@ -67,7 +67,13 @@ void LoadFont(sdl::Font* font) {
 
 class SysView {
  public:
-  SysView(const phys::System* sys, sdl::Renderer* ren) : sys_(sys), ren_(ren) {
+  SysView(const phys::System* sys, sdl::Renderer* ren)
+      : pow_(0),
+        nneutrons_(0),
+        period_(0),
+        fps_(0),
+        sys_(sys),
+        ren_(ren) {
     LoadFont(&font_);
     bg_color_ = sdl::Color::black();
     neut_color_ = sdl::Color::red();
@@ -131,21 +137,33 @@ class SysView {
   };
 
   void DrawInfo(double fps) {
-    std::string sfps = FixedWidthInt((int)fps, 4);
+    double deltat_sec = 1 / fps;
+    cumdt_ += deltat_sec;
+
+    // this prevents the info from changing too quickly to read on screen
+    if (cumdt_ > 1) {
+      cumdt_ = 0;
+      pow_ = sys_->power();
+      nneutrons_ = sys_->neutrons().size();
+      period_ = sys_->period();
+      fps_ = fps;
+    }
+
+    std::string sfps = FixedWidthInt(fps_, 4);
     std::stringstream ss;
     ss << "FPS: " << sfps;
     auto surf = font_.RenderBlended(ss.str().c_str(), font_color_);
     sdl::Texture tex(*ren_, *surf.get());
     tex.ApplyFull(10, 10);
 
-    std::string pow = FixedWidthInt(sys_->power(), 7);
+    std::string pow = FixedWidthInt(pow_, 7);
     std::stringstream ss4;
     ss4 << "Power: " << pow;
     auto surf4 = font_.RenderBlended(ss4.str().c_str(), font_color_);
     sdl::Texture tex4(*ren_, *surf4.get());
     tex4.ApplyFull(10, 30);
 
-    std::string nn = FixedWidthInt(sys_->neutrons().size(), 7);
+    std::string nn = FixedWidthInt(nneutrons_, 7);
     std::stringstream ss2;
     ss2 << "Neutrons: " << nn;
     auto surf2 = font_.RenderBlended(ss2.str().c_str(), font_color_);
@@ -153,11 +171,17 @@ class SysView {
     tex2.ApplyFull(10, 50);
 
     std::stringstream ss3;
-    ss3 << "Period: " << sys_->period();
+    ss3 << "Period: " << period_;
     auto surf3 = font_.RenderBlended(ss3.str().c_str(), font_color_);
     sdl::Texture tex3(*ren_, *surf3.get());
     tex3.ApplyFull(10, 70);
   }
+
+  double cumdt_;
+  double pow_;
+  int nneutrons_;
+  double period_;
+  int fps_;
 
   sdl::Color bg_color_;
   sdl::Color neut_color_;

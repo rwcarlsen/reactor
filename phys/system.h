@@ -21,7 +21,7 @@ class System {
     : width_(w),
       height_(h),
       neutron_weight_(1),
-      prevn_(0),
+      prevpow_(0),
       normal1_(Neutron::kNomSpeed, Neutron::kNomSpeed / 8.0),
     blank_(Object::Rect {0, 0, 1, 1}) { };
 
@@ -42,7 +42,7 @@ class System {
   void Tick(double deltat) {
     // roulette off neutrons if we have too many
     double dtmax = 0.03;
-    if (deltat > dtmax) {
+    if (deltat > 1.1*dtmax) {
       double pkill = (deltat - dtmax) / deltat;
       int nkill = 0;
       int i = 0;
@@ -58,8 +58,8 @@ class System {
       }
 
       neutron_weight_ *= (double)(neutrons_.size() + nkill) / (double)neutrons_.size();
-    } else if (deltat < dtmax && neutron_weight_ > 1) {
-      double pdup = (dtmax - deltat) / deltat;
+    } else if (deltat < 0.9*dtmax && neutron_weight_ > 1) {
+      double pdup = (dtmax - deltat) / dtmax;
       int norig = neutrons_.size();
       for (int i = 0; i < norig; i++) {
         double r = uniform01_(rand_gen_);
@@ -125,12 +125,12 @@ class System {
     cumdt_ += deltat;
     double window_sec = 2;
     if (cumdt_ >= window_sec) {
-      double currn = neutrons_.size();
-      if (currn > 100 && prevn_ > 100 && currn != prevn_) {
-        period_ = cumdt_ / std::log(currn / prevn_);
+      double currpow = power();
+      if (currpow > 100 && prevpow_ > 100 && currpow != prevpow_) {
+        period_ = cumdt_ / std::log(currpow / prevpow_);
       }
       cumdt_ = 0;
-      prevn_ = neutrons_.size();
+      prevpow_ = currpow;
     }
 
     for (int i = 0; i < objs_.size(); i++) {
@@ -226,7 +226,7 @@ class System {
   std::vector<Object*> objs_;
   Object blank_;
   Neutron::Pop neutrons_;
-  double prevn_;
+  double prevpow_;
   double cumdt_;
   double period_;
   double neutron_weight_;

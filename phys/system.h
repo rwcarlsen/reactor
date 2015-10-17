@@ -43,9 +43,9 @@ class System {
             o->rect().x + o->rect().w < toolbar_.rect().x + toolbar_.rect().w &&
             o->rect().y + o->rect().h < toolbar_.rect().y + toolbar_.rect().h);
   };
-  
+
   Toolbar toolbar() {return toolbar_; };
-  
+
   void AddObject(Object* o) {
     objs_.push_back(o);
   };

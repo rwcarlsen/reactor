@@ -18,7 +18,7 @@ class Absorber : public Object {
   }
 
   virtual Absorber* clone() { return new Absorber(*this); };
-  
+
   virtual double absorb_prob(double speed) {
     return Neutron::kMinSpeed / speed * p_absorb;
   };

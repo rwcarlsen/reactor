@@ -102,7 +102,7 @@ int main(int argc, char** argv) {
     phys::Object::Rect fr{tb_r.x+tb_r.w/2-20,tb_r.y+(int)((double)tb_r.h*.45)-20,40,40};
     fuel.Init(fr, sdl::Color::purple());
     sys.AddObject(&fuel);
-    
+
     phys::BasicMaterial reflector{0, 0, .1, 1, 0};
     phys::Object::Rect rr{tb_r.x+tb_r.w/2-40,tb_r.y+(int)((double)tb_r.h*.6)-40,80,80};
     reflector.Init(rr, sdl::Color::white());
@@ -117,7 +117,7 @@ int main(int argc, char** argv) {
     phys::Object::Rect mr{tb_r.x+tb_r.w/2-40,tb_r.y+(int)((double)tb_r.h*.9)-40,80,80};
     moderator.Init(mr, sdl::Color::green());
     sys.AddObject(&moderator);
-    
+
     stream1.sys(&sys);
 
     draw::SysView view(&sys, &ren);

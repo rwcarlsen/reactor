@@ -31,7 +31,7 @@ class Object {
   };
 
   virtual Object* clone() { return new Object(*this); };
-  
+
   void Init(Rect bounds, sdl::Color c = sdl::Color::white()) {
     r_ = bounds;
     color_ = c;

@@ -37,6 +37,14 @@ class System {
    AddObject(&toolbar_);
   }
 
+  bool inToolbar(Object* o) {
+    return (o->rect().x > toolbar_.rect().x &&
+            o->rect().y > toolbar_.rect().y &&
+            o->rect().x + o->rect().w < toolbar_.rect().x + toolbar_.rect().w &&
+            o->rect().y + o->rect().h < toolbar_.rect().y + toolbar_.rect().h);
+  };
+  
+
   void AddObject(Object* o) {
     objs_.push_back(o);
   };

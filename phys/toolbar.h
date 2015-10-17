@@ -28,6 +28,12 @@ namespace phys {
       return surf_;
     };
 
+    virtual double absorb_prob(double speed) {
+      return 0.5;
+    };
+        
+    
+    
   };
 
 } // namespace phys

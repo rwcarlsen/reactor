@@ -94,6 +94,7 @@ int main(int argc, char** argv) {
 
     // create system and a view for drawing it
     phys::System sys(w, h);
+    sys.AddToolbar();
     sys.AddObject(&reflector1);
     sys.AddObject(&reflector2);
     sys.AddObject(&reflector3);

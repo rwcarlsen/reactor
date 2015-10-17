@@ -9,6 +9,7 @@
 
 #include "phys/object.h"
 #include "phys/neutron.h"
+#include "phys/toolbar.h"
 
 #define SHOW(X) \
   std::cout << __FILE__ << ":" << __LINE__ << ": "#X" = " << X << "\n"
@@ -26,6 +27,13 @@ class System {
     blank_(Object::Rect {0, 0, 1, 1}) { };
 
   ~System() { };
+
+  void AddToolbar()
+  {
+   toolbar_ = Toolbar();
+   toolbar_.Init(Object::Rect {0,0.15*height_,0.1*width_,height_});
+   AddObject(&toolbar_);
+  }
 
   void AddObject(Object* o) {
     objs_.push_back(o);
@@ -225,6 +233,7 @@ class System {
 
   std::vector<Object*> objs_;
   Object blank_;
+  Toolbar toolbar_;
   Neutron::Pop neutrons_;
   double prevpow_;
   double cumdt_;

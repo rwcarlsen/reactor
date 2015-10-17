@@ -33,7 +33,7 @@ class System {
    toolbar_ = Toolbar();
    //fraction of window width for toolbar
    double tb_w = 0.1;
-   toolbar_.Init(Object::Rect {(1-tb_w)*width_,0,tb_w*width_,height_});
+   toolbar_.Init(Object::Rect {(int)((1-tb_w)*(double)width_),0,(int)(tb_w*(double)width_),height_});
    AddObject(&toolbar_);
   }
 
@@ -44,7 +44,8 @@ class System {
             o->rect().y + o->rect().h < toolbar_.rect().y + toolbar_.rect().h);
   };
   
-
+  Toolbar toolbar() {return toolbar_; };
+  
   void AddObject(Object* o) {
     objs_.push_back(o);
   };

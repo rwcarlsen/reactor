@@ -95,34 +95,31 @@ int main(int argc, char** argv) {
     // create system and a view for drawing it
     phys::System sys(w, h);
     sys.AddToolbar();
-    sys.AddObject(&reflector1);
-    sys.AddObject(&reflector2);
-    sys.AddObject(&reflector3);
-    sys.AddObject(&reflector4);
-    sys.AddObject(&absorber1);
-    sys.AddObject(&absorber2);
-    sys.AddObject(&absorber3);
-    sys.AddObject(&absorber4);
-    sys.AddObject(&moderator1);
-    sys.AddObject(&moderator2);
-    sys.AddObject(&moderator3);
-    sys.AddObject(&moderator4);
-    sys.AddObject(&voidmoderator1);
-    sys.AddObject(&fuel1);
-    sys.AddObject(&fuel2);
-    sys.AddObject(&fuel3);
-    sys.AddObject(&fuel4);
-    sys.AddObject(&fuel5);
-    sys.AddObject(&fuel6);
-    sys.AddObject(&fuel7);
-    sys.AddObject(&fuel8);
-    sys.AddObject(&fuel9);
-    sys.AddObject(&detector1);
-    sys.AddObject(&detector2);
-    sys.AddObject(&detector3);
-    sys.AddObject(&detector4);
-    sys.AddObject(&stream1);
+    phys::Object::Rect tb_r = sys.toolbar().rect();
+
+    //add fuel item inside toolbar
+    phys::Fuel fuel(0, 0.070, 2);
+    phys::Object::Rect fr{tb_r.x+tb_r.w/2-20,tb_r.y+(int)((double)tb_r.h*.25)-20,40,40};
+    fuel.Init(fr, sdl::Color::purple());
+    sys.AddObject(&fuel);
+    
+    phys::BasicMaterial reflector{0, 0, .1, 1, 0};
+    phys::Object::Rect rr{tb_r.x+tb_r.w/2-40,tb_r.y+(int)((double)tb_r.h*.6)-40,80,80};
+    reflector.Init(rr, sdl::Color::white());
+    sys.AddObject(&reflector);
+
+    phys::Absorber absorber{.1};
+    phys::Object::Rect ar{tb_r.x+tb_r.w/2-40,tb_r.y+(int)((double)tb_r.h*.75)-40,80,80};
+    absorber.Init(ar, sdl::Color::blue());
+    sys.AddObject(&absorber);
+
+    phys::BasicMaterial moderator{0, 0, .03, .3, 0};
+    phys::Object::Rect mr{tb_r.x+tb_r.w/2-40,tb_r.y+(int)((double)tb_r.h*.9)-40,80,80};
+    moderator.Init(mr, sdl::Color::green());
+    sys.AddObject(&moderator);
+    
     stream1.sys(&sys);
+
     draw::SysView view(&sys, &ren);
 
     // start up the main loop

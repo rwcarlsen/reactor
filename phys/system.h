@@ -31,7 +31,9 @@ class System {
   void AddToolbar()
   {
    toolbar_ = Toolbar();
-   toolbar_.Init(Object::Rect {0,0.15*height_,0.1*width_,height_});
+   //fraction of window width for toolbar
+   double tb_w = 0.1;
+   toolbar_.Init(Object::Rect {(1-tb_w)*width_,0,tb_w*width_,height_});
    AddObject(&toolbar_);
   }
 

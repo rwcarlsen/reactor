@@ -30,9 +30,7 @@ namespace phys {
 
     virtual double absorb_prob(double speed) {
       return 1;
-    };
-        
-    
+    };            
     
   };
 

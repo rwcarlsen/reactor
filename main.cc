@@ -99,7 +99,7 @@ int main(int argc, char** argv) {
 
     //add fuel item inside toolbar
     phys::Fuel fuel(0, 0.070, 2);
-    phys::Object::Rect fr{tb_r.x+tb_r.w/2-20,tb_r.y+(int)((double)tb_r.h*.25)-20,40,40};
+    phys::Object::Rect fr{tb_r.x+tb_r.w/2-20,tb_r.y+(int)((double)tb_r.h*.45)-20,40,40};
     fuel.Init(fr, sdl::Color::purple());
     sys.AddObject(&fuel);
     

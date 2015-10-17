@@ -22,7 +22,7 @@ class Fuel : public Object {
   }
 
   virtual Fuel* clone() { return new Fuel(*this); };
-  
+
   virtual double fiss_prob(double speed) {
     return Neutron::kMinSpeed / speed * nom_fiss_prob_;
   };

@@ -23,7 +23,7 @@ class Detector : public Object {
     curr_n_ = f->curr_n_;
     deltat_ = f->deltat_;
   }
-  
+
   virtual sdl::Surface* surface() {
     std::string n_inside = draw::FixedWidthInt((int)curr_n_, 4);
     std::stringstream ss;

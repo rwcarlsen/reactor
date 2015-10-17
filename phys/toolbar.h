@@ -20,6 +20,8 @@ namespace phys {
       isToolbar_ = true;
       Init(bounds, sdl::Color::gray());
     };
+    
+    virtual Toolbar* clone() { return new Toolbar(*this); };
 
     virtual sdl::Surface* surface() {
 

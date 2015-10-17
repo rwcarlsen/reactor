@@ -157,6 +157,11 @@ int main(int argc, char** argv) {
           dragged = sys.ObjectFor(ev.button.x, ev.button.y);
 	  if(dragged->isToolbar())
 	    continue;
+	  if(sys.inToolbar(dragged) && !dragged->detector())
+	    {
+	      phys::Object* temp = dragged->clone();
+	      sys.AddObject(&(*temp));
+	    }
           sys.MoveTop(dragged);
           dragging = true;
         } else if (ev.type == SDL_KEYDOWN) {

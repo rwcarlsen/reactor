@@ -8,16 +8,22 @@
 
 
 
+
 namespace phys {
 
   class Toolbar : public Object {
 
   public:
-    Toolbar() { };
+    Toolbar() { isToolbar_ = true;};
+
+    Toolbar(Object::Rect bounds) {
+      isToolbar_ = true;
+      Init(bounds, sdl::Color::gray());
+    };
 
     virtual sdl::Surface* surface() {
 
-      surf_->FillRect(NULL, sdl::Color::white() );
+      surf_->FillRect(NULL, sdl::Color::gray() );
 
       return surf_;
     };

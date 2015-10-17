@@ -155,6 +155,8 @@ int main(int argc, char** argv) {
         } else if (ev.type == SDL_MOUSEBUTTONDOWN &&
                    ev.button.button == SDL_BUTTON_LEFT) {
           dragged = sys.ObjectFor(ev.button.x, ev.button.y);
+	  if(dragged->isToolbar())
+	    continue;
           sys.MoveTop(dragged);
           dragging = true;
         } else if (ev.type == SDL_KEYDOWN) {

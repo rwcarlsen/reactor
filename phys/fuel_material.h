@@ -19,9 +19,10 @@ class Fuel : public Object {
     scat_prob_ = f->scat_prob_;
     rand_gen_ = f->rand_gen_;
     uniform_ = f->uniform_;
+    voids_.clear();
   }
 
-  virtual Fuel* clone() { return new Fuel(*this); };
+  virtual Fuel* clone() { return new Fuel(&(*this)); };
 
   virtual double fiss_prob(double speed) {
     return Neutron::kMinSpeed / speed * nom_fiss_prob_;

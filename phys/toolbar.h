@@ -21,7 +21,11 @@ namespace phys {
       Init(bounds, sdl::Color::gray());
     };
 
-    virtual Toolbar* clone() { return new Toolbar(*this); };
+    Toolbar(const Toolbar* t) : Object(t) {
+      
+    };
+    
+    virtual Toolbar* clone() { return new Toolbar(&(*this)); };
 
     virtual sdl::Surface* surface() {
 

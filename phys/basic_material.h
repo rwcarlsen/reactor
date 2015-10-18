@@ -29,7 +29,7 @@ class BasicMaterial : public Object {
     uniform_ = f->uniform_;
   }
 
-  virtual BasicMaterial* clone() { return new BasicMaterial(*this); };
+  virtual BasicMaterial* clone() { return new BasicMaterial(&(*this)); };
 
   virtual double absorb_prob(double speed) {
     return p_absorb;

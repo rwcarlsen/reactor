@@ -35,7 +35,7 @@ class StreamSource : public Object {
     return E;
   }
 
-  virtual StreamSource* clone() { return new StreamSource(*this); };
+  virtual StreamSource* clone() { return new StreamSource(&(*this)); };
 
   virtual bool OnClick(int x, int y) {
     Dir d = dir(x, y);

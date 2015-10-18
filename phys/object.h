@@ -30,7 +30,7 @@ class Object {
     surf_->FillRect(NULL, color_);
   };
 
-  virtual Object* clone() { return new Object(*this); };
+  virtual Object* clone() { return new Object(&(*this)); };
 
   void Init(Rect bounds, sdl::Color c = sdl::Color::white()) {
     r_ = bounds;

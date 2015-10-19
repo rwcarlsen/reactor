@@ -6,6 +6,7 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <algorithm>
 
 #include "phys/object.h"
 #include "phys/neutron.h"
@@ -48,6 +49,18 @@ class System {
 
   void AddObject(Object* o) {
     objs_.push_back(o);
+  };
+
+  void RemoveObject(Object *o)
+  {
+    std::vector<Object*>::iterator it;
+    for(unsigned int i=0; i < objs_.size(); i++)
+      {
+	if ( objs_[i] == o )
+	  {
+	    it = objs_.erase(objs_.begin()+i);
+	  }
+      }
   };
 
   void AddNeutrons(Neutron::Pop ns) {

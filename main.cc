@@ -175,6 +175,11 @@ int main(int argc, char** argv) {
             dragged->Shift(5, 0);
           }
         } else if (ev.type == SDL_MOUSEBUTTONUP && ev.button.button == SDL_BUTTON_LEFT) {
+	  if(sys.inToolbar(dragged) && !dragged->detector())
+	    {
+	      std::cout << "Removing object" << std::endl;
+	      sys.RemoveObject(&(*dragged));
+	    }
           dragging = false;
         } else if (ev.type == SDL_MOUSEMOTION && dragging) {
           dragged->Shift(ev.motion.xrel, ev.motion.yrel);

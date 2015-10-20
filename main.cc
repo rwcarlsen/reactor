@@ -94,31 +94,30 @@ int main(int argc, char** argv) {
 
     // create system and a view for drawing it
     phys::System sys(w, h);
-    sys.AddToolbar();
-    phys::Object::Rect tb_r = sys.toolbar().rect();
+    phys::Toolbar toolbar = sys.toolbar();
+
+    phys::Object::Rect r;
 
     //add fuel item inside toolbar
     phys::Fuel fuel(0, 0.070, 2);
-    phys::Object::Rect fr{tb_r.x+tb_r.w/2-20,tb_r.y+(int)((double)tb_r.h*.45)-20,40,40};
-    fuel.Init(fr, sdl::Color::purple());
+    r = {0, 0, 40, 40};
+    fuel.Init(*toolbar.PlaceItem(&r), sdl::Color::purple());
     sys.AddObject(&fuel);
 
     phys::BasicMaterial reflector{0, 0, .1, 1, 0};
-    phys::Object::Rect rr{tb_r.x+tb_r.w/2-40,tb_r.y+(int)((double)tb_r.h*.6)-40,80,80};
-    reflector.Init(rr, sdl::Color::white());
+    r = {0, 0, 80, 80};
+    reflector.Init(*toolbar.PlaceItem(&r), sdl::Color::white());
     sys.AddObject(&reflector);
 
     phys::Absorber absorber{.1};
-    phys::Object::Rect ar{tb_r.x+tb_r.w/2-40,tb_r.y+(int)((double)tb_r.h*.75)-40,80,80};
-    absorber.Init(ar, sdl::Color::blue());
+    r = {0, 0, 80, 80};
+    absorber.Init(*toolbar.PlaceItem(&r), sdl::Color::blue());
     sys.AddObject(&absorber);
 
     phys::BasicMaterial moderator{0, 0, .03, .3, 0};
-    phys::Object::Rect mr{tb_r.x+tb_r.w/2-40,tb_r.y+(int)((double)tb_r.h*.9)-40,80,80};
-    moderator.Init(mr, sdl::Color::green());
+    r = {0, 0, 80, 80};
+    moderator.Init(*toolbar.PlaceItem(&r), sdl::Color::green());
     sys.AddObject(&moderator);
-
-    stream1.sys(&sys);
 
     draw::SysView view(&sys, &ren);
 
@@ -154,7 +153,7 @@ int main(int argc, char** argv) {
           dragged = sys.ObjectFor(ev.button.x, ev.button.y);
 	  if(dragged->isToolbar())
 	    continue;
-	  if(sys.inToolbar(dragged) && !dragged->detector())
+	  if(sys.InToolbar(dragged) && !dragged->detector())
 	    {
 	      phys::Object* temp = dragged->clone();
 	      sys.AddObject(&(*temp));
@@ -175,9 +174,8 @@ int main(int argc, char** argv) {
             dragged->Shift(5, 0);
           }
         } else if (ev.type == SDL_MOUSEBUTTONUP && ev.button.button == SDL_BUTTON_LEFT) {
-	  if(sys.inToolbar(dragged) && !dragged->detector())
+	  if(sys.InToolbar(dragged) && !dragged->detector())
 	    {
-	      std::cout << "Removing object" << std::endl;
 	      sys.RemoveObject(&(*dragged));
 	    }
           dragging = false;

@@ -25,27 +25,23 @@ class System {
       neutron_weight_(1),
       prevpow_(0),
       normal1_(Neutron::kNomSpeed, Neutron::kNomSpeed / 8.0),
-    blank_(Object::Rect {0, 0, 1, 1}) { };
+      blank_(Object::Rect {0, 0, 1, 1}) {
+    //fraction of window width for toolbar
+    double tb_w = 0.1;
+    toolbar_.Init(Object::Rect {(int)((1-tb_w)*(double)width_),0,(int)(tb_w*(double)width_),height_}, sdl::Color::gray());
+    AddObject(&toolbar_);
+  };
 
   ~System() { };
 
-  void AddToolbar()
-  {
-   toolbar_ = Toolbar();
-   //fraction of window width for toolbar
-   double tb_w = 0.1;
-   toolbar_.Init(Object::Rect {(int)((1-tb_w)*(double)width_),0,(int)(tb_w*(double)width_),height_});
-   AddObject(&toolbar_);
-  }
-
-  bool inToolbar(Object* o) {
-    return (o->rect().x > toolbar_.rect().x &&
-            o->rect().y > toolbar_.rect().y &&
-            o->rect().x + o->rect().w < toolbar_.rect().x + toolbar_.rect().w &&
-            o->rect().y + o->rect().h < toolbar_.rect().y + toolbar_.rect().h);
+  bool InToolbar(Object* o) {
+    return (o->rect().x >= toolbar_.rect().x &&
+            o->rect().y >= toolbar_.rect().y &&
+            o->rect().x + o->rect().w <= toolbar_.rect().x + toolbar_.rect().w &&
+            o->rect().y + o->rect().h <= toolbar_.rect().y + toolbar_.rect().h);
   };
 
-  Toolbar toolbar() {return toolbar_; };
+  Toolbar& toolbar() {return toolbar_; };
 
   void AddObject(Object* o) {
     objs_.push_back(o);

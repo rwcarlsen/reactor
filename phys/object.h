@@ -11,6 +11,8 @@
 
 namespace phys {
 
+class System;
+
 class Object {
  public:
   typedef SDL_Rect Rect;
@@ -88,7 +90,7 @@ class Object {
     return 0;
   };
 
-  virtual void tick_info(double deltat, std::vector<Neutron*> neutrons, double neutron_weight) { };
+  virtual void Tick(double deltat, System* sys, std::vector<Neutron*> neutrons) { };
 
  protected:
   bool detector_;

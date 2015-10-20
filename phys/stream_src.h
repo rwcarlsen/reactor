@@ -15,11 +15,9 @@ enum Dir {N, S, E, W};
 
 class StreamSource : public Object {
  public:
-  StreamSource() : deltat_(1) {};
+  StreamSource() {};
 
-  StreamSource(const StreamSource* f) : Object(f) {
-    deltat_ = f->deltat_;
-  }
+  StreamSource(const StreamSource* f) : Object(f) { }
 
   Dir dir(int x, int y) {
     Rect r = rect();
@@ -105,8 +103,8 @@ class StreamSource : public Object {
     return std::make_pair(vx, vy);
   }
   
-  void Stream() {
-    int n = (int) kNPS * deltat_;
+  virtual void Tick(double deltat, System* sys, std::vector<Neutron*> neutrons) {
+    int n = (int) kNPS * deltat;
     std::set<Dir>::iterator it;
     for (it = streaming_.begin(); it != streaming_.end(); ++it) {
       phys::Neutron::Pop ns;
@@ -116,21 +114,12 @@ class StreamSource : public Object {
         ns.push_back(phys::Neutron(coords.first, coords.second,
                                    speed.first, speed.second));
       }
-      sys_->AddNeutrons(ns);
+      sys->AddNeutrons(ns);
     }
   }
 
-  void sys(phys::System* s) { sys_ = s; }
-  
-  virtual void tick_info(double deltat, std::vector<Neutron*> neutrons, double neutron_weight) {
-    deltat_ = deltat;
-    Stream();
-  }
-
  private:
-  phys::System* sys_;
   std::set<Dir> streaming_;
-  double deltat_;
 };
 
 }

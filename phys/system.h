@@ -161,7 +161,7 @@ class System {
     }
 
     for (int i = 0; i < objs_.size(); i++) {
-      objs_[i]->tick_info(deltat, neuts[objs_[i]], neutron_weight_);
+      objs_[i]->Tick(deltat, this, neuts[objs_[i]]);
     }
   };
 

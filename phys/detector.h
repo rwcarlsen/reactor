@@ -44,9 +44,9 @@ class Detector : public Object {
     return surf_;
   }
 
-  virtual void tick_info(double deltat, std::vector<Neutron*> neutrons, double neutron_weight) {
+  virtual void Tick(double deltat, System* sys, std::vector<Neutron*> neutrons) {
     prev_n_ = curr_n_;
-    curr_n_ = neutrons.size() * neutron_weight;
+    curr_n_ = neutrons.size() * sys->neutron_weight();
     deltat_ = deltat;
   }
 

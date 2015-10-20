@@ -10,11 +10,11 @@ namespace phys {
 
 class Toolbar : public Object {
  public:
-  Toolbar() : ycurr_(0) {
+  Toolbar() : ycurr_(20) {
     isToolbar_ = true;
   };
 
-  Toolbar(const Toolbar* t) : Object(t), ycurr_(20) { };
+  Toolbar(const Toolbar* t) : Object(t) { };
   
   virtual Toolbar* clone() { return new Toolbar(&(*this)); };
 

@@ -134,6 +134,21 @@ bool ProcessEvents(phys::System* sys) {
         sys->AddObject(&(*temp));
       }
       sys->MoveTop(dragged);
+    } else if (ev.type == SDL_MOUSEBUTTONUP &&
+               ev.button.button == SDL_BUTTON_LEFT) {
+      if (sys->InToolbar(dragged) && !dragged->isToolbar()) {
+        sys->RemoveObject(&(*dragged));
+      }
+      dragged = nullptr;
+    } else if (ev.type == SDL_MOUSEMOTION && dragged != nullptr) {
+      if (dragged->isToolbar()) {
+        continue;
+      }
+      if (lctrl || rctrl) {
+        dragged->Resize(ev.motion.x, ev.motion.y, ev.motion.xrel, ev.motion.yrel);
+      } else {
+        dragged->Shift(ev.motion.xrel, ev.motion.yrel);
+      }
     } else if (ev.type == SDL_KEYDOWN) {
       if (ev.key.keysym.sym == SDLK_LCTRL) {
         lctrl = true; 
@@ -155,18 +170,6 @@ bool ProcessEvents(phys::System* sys) {
         lctrl = false; 
       } else if (ev.key.keysym.sym == SDLK_RCTRL) {
         rctrl = false; 
-      }
-    } else if (ev.type == SDL_MOUSEBUTTONUP &&
-               ev.button.button == SDL_BUTTON_LEFT) {
-      if (sys->InToolbar(dragged)) {
-        sys->RemoveObject(&(*dragged));
-      }
-      dragged = nullptr;
-    } else if (ev.type == SDL_MOUSEMOTION && dragged != nullptr) {
-      if (lctrl || rctrl) {
-        dragged->Resize(ev.motion.x, ev.motion.y, ev.motion.xrel, ev.motion.yrel);
-      } else {
-        dragged->Shift(ev.motion.xrel, ev.motion.yrel);
       }
     }
   }

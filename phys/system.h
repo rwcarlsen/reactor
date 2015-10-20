@@ -35,10 +35,9 @@ class System {
   ~System() { };
 
   bool InToolbar(Object* o) {
-    return (o->rect().x >= toolbar_.rect().x &&
-            o->rect().y >= toolbar_.rect().y &&
-            o->rect().x + o->rect().w <= toolbar_.rect().x + toolbar_.rect().w &&
-            o->rect().y + o->rect().h <= toolbar_.rect().y + toolbar_.rect().h);
+    SDL_Rect a = o->rect();
+    SDL_Rect b = toolbar_.rect();
+    return SDL_HasIntersection(&a, &b);
   };
 
   Toolbar& toolbar() {return toolbar_; };

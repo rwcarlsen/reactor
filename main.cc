@@ -41,47 +41,9 @@ int main(int argc, char** argv) {
     sdl::Renderer ren(win, SDL_RENDERER_ACCELERATED);
 
     // create material geometry
-    phys::BasicMaterial reflector1{0, 0, .1, 1, 0};
-    phys::Object::Rect r1{w / 2 - 40, h / 2 - 40, 120, 120};
-    reflector1.Init(r1, sdl::Color::white());
-    phys::BasicMaterial reflector2(&reflector1);
-    phys::BasicMaterial reflector3(&reflector1);
-    phys::BasicMaterial reflector4(&reflector1);
-
-    phys::Absorber absorber1{.1};
-    phys::Object::Rect r2{w / 2 - 130, h / 2 - 40, 80, 80};
-    absorber1.Init(r2, sdl::Color::blue());
-    phys::Absorber absorber2(&absorber1);
-    phys::Absorber absorber3(&absorber1);
-    phys::Absorber absorber4(&absorber1);
-
-    phys::BasicMaterial moderator1{0, 0, .03, .3, 0};
-    phys::Object::Rect r3{w / 2 + 50, h / 2 - 40, 80, 80};
-    moderator1.Init(r3, sdl::Color::green());
-    phys::BasicMaterial moderator2(&moderator1);
-    phys::BasicMaterial moderator3(&moderator1);
-    phys::BasicMaterial moderator4(&moderator1);
-
     phys::Moderator voidmoderator1(.03, .3, 200);
     phys::Object::Rect r3b{w / 2 + 130, h / 2 - 40, 60, 60};
     voidmoderator1.Init(r3b, sdl::Color::lime());
-
-    phys::Fuel fuel1(0, 0.070, 2);
-    phys::Object::Rect r4{w / 2 - 20, h / 2 + 50, 40, 40};
-    fuel1.Init(r4, sdl::Color::purple());
-    phys::Fuel fuel2(&fuel1);
-    phys::Fuel fuel3(&fuel1);
-    phys::Fuel fuel4(&fuel1);
-    phys::Fuel fuel5(&fuel1);
-    phys::Fuel fuel6(&fuel1);
-    phys::Fuel fuel7(&fuel1);
-    phys::Fuel fuel8(&fuel1);
-    phys::Fuel fuel9(&fuel1);
-
-    phys::Object::Rect r5{w / 2 + 130, h / 2 + 140, 100, 100};
-    phys::Detector detector1;
-    detector1.Init(r5, sdl::Color::yellow(128));
-    phys::Detector detector2(&detector1);
 
     phys::Object::Rect r6{w / 2 + 80, h / 2 + 80, 50, 50};
     phys::Detector detector3;
@@ -98,7 +60,7 @@ int main(int argc, char** argv) {
 
     phys::Object::Rect r;
 
-    // add fuel item inside toolbar
+    // add materials to system toolbar
     phys::Fuel fuel(0, 0.070, 2);
     r = {0, 0, 40, 40};
     fuel.Init(*toolbar.PlaceItem(&r), sdl::Color::purple());
@@ -118,6 +80,11 @@ int main(int argc, char** argv) {
     r = {0, 0, 80, 80};
     moderator.Init(*toolbar.PlaceItem(&r), sdl::Color::green());
     sys.AddObject(&moderator);
+
+    phys::Detector detector;
+    r = {0, 0, 100, 100};
+    detector.Init(*toolbar.PlaceItem(&r), sdl::Color::yellow(128));
+    sys.AddObject(&detector);
 
     draw::SysView view(&sys, &ren);
 
@@ -150,8 +117,10 @@ int main(int argc, char** argv) {
         } else if (ev.type == SDL_MOUSEBUTTONDOWN &&
                    ev.button.button == SDL_BUTTON_LEFT) {
           dragged = sys.ObjectFor(ev.button.x, ev.button.y);
-          if (dragged->isToolbar()) continue;
-          if (sys.InToolbar(dragged) && !dragged->detector()) {
+          if (dragged->isToolbar()) {
+            continue;
+          }
+          if (sys.InToolbar(dragged)) {
             phys::Object* temp = dragged->clone();
             sys.AddObject(&(*temp));
           }
@@ -172,7 +141,7 @@ int main(int argc, char** argv) {
           }
         } else if (ev.type == SDL_MOUSEBUTTONUP &&
                    ev.button.button == SDL_BUTTON_LEFT) {
-          if (sys.InToolbar(dragged) && !dragged->detector()) {
+          if (sys.InToolbar(dragged)) {
             sys.RemoveObject(&(*dragged));
           }
           dragging = false;

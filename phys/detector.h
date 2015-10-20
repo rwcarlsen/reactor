@@ -24,6 +24,8 @@ class Detector : public Object {
     deltat_ = f->deltat_;
   }
 
+  virtual Detector* clone() { return new Detector(&(*this)); };
+
   virtual sdl::Surface* surface() {
     std::string n_inside = draw::FixedWidthInt((int)curr_n_, 4);
     std::stringstream ss;

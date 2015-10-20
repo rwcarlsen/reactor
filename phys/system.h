@@ -6,9 +6,11 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <algorithm>
 
 #include "phys/object.h"
 #include "phys/neutron.h"
+#include "phys/toolbar.h"
 
 #define SHOW(X) \
   std::cout << __FILE__ << ":" << __LINE__ << ": "#X" = " << X << "\n"
@@ -23,12 +25,37 @@ class System {
       neutron_weight_(1),
       prevpow_(0),
       normal1_(Neutron::kNomSpeed, Neutron::kNomSpeed / 8.0),
-    blank_(Object::Rect {0, 0, 1, 1}) { };
+      blank_(Object::Rect {0, 0, 1, 1}) {
+    //fraction of window width for toolbar
+    int tb_w = 150;
+    toolbar_.Init(Object::Rect {width_ - tb_w,0,tb_w,height_}, sdl::Color::gray());
+    AddObject(&toolbar_);
+  };
 
   ~System() { };
 
+  bool InToolbar(Object* o) {
+    SDL_Rect a = o->rect();
+    SDL_Rect b = toolbar_.rect();
+    return SDL_HasIntersection(&a, &b);
+  };
+
+  Toolbar& toolbar() {return toolbar_; };
+
   void AddObject(Object* o) {
     objs_.push_back(o);
+  };
+
+  void RemoveObject(Object *o)
+  {
+    std::vector<Object*>::iterator it;
+    for(unsigned int i=0; i < objs_.size(); i++)
+      {
+	if ( objs_[i] == o )
+	  {
+	    it = objs_.erase(objs_.begin()+i);
+	  }
+      }
   };
 
   void AddNeutrons(Neutron::Pop ns) {
@@ -225,6 +252,7 @@ class System {
 
   std::vector<Object*> objs_;
   Object blank_;
+  Toolbar toolbar_;
   Neutron::Pop neutrons_;
   double prevpow_;
   double cumdt_;

@@ -27,8 +27,8 @@ class System {
       normal1_(Neutron::kNomSpeed, Neutron::kNomSpeed / 8.0),
       blank_(Object::Rect {0, 0, 1, 1}) {
     //fraction of window width for toolbar
-    double tb_w = 0.1;
-    toolbar_.Init(Object::Rect {(int)((1-tb_w)*(double)width_),0,(int)(tb_w*(double)width_),height_}, sdl::Color::gray());
+    int tb_w = 150;
+    toolbar_.Init(Object::Rect {width_ - tb_w,0,tb_w,height_}, sdl::Color::gray());
     AddObject(&toolbar_);
   };
 

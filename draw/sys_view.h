@@ -72,6 +72,7 @@ class SysView {
         nneutrons_(0),
         period_(0),
         fps_(0),
+        cumdt_(0),
         sys_(sys),
         ren_(ren) {
     LoadFont(&font_);
@@ -150,7 +151,7 @@ class SysView {
   };
 
   void DrawInfo(double fps) {
-    double deltat_sec = 1 / fps;
+    double deltat_sec = 1.0 / fps;
     cumdt_ += deltat_sec;
 
     // this prevents the info from changing too quickly to read on screen

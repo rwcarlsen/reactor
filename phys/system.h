@@ -40,6 +40,12 @@ class System {
     return SDL_HasIntersection(&a, &b);
   };
 
+  bool InToolbar(int x, int y) {
+    SDL_Rect a = {x, y, 1, 1};
+    SDL_Rect b = toolbar_.rect();
+    return SDL_HasIntersection(&a, &b);
+  };
+
   Toolbar& toolbar() {return toolbar_; };
 
   void AddObject(Object* o) {
@@ -104,7 +110,11 @@ class System {
       Neutron* n = &neutrons_[i];
 
       // remove out of bounds neutrons
-      if (n->x() < 0 || n->y() < 0 || n->x() > width_ || n->y() > height_) {
+      if (   n->x() < 0
+          || n->y() < 0
+          || n->x() > width_
+          || n->y() > height_
+          || InToolbar(n->x(), n->y())) {
         neutrons_[i] = neutrons_[neutrons_.size() - 1];
         neutrons_.pop_back();
         continue;

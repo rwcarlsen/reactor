@@ -34,6 +34,15 @@ class Object {
 
   virtual Object* clone() { return new Object(&(*this)); };
 
+  virtual void Resize(int x, int y, int dx, int dy) {
+    Object::Rect rnew = r_;
+    rnew.w += dx;
+    rnew.h += dy;
+    rnew.w = std::max(rnew.w, 10);
+    rnew.h = std::max(rnew.h, 10);
+    Init(rnew, color_);
+  };
+
   void Init(Rect bounds, sdl::Color c = sdl::Color::white()) {
     r_ = bounds;
     color_ = c;

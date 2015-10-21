@@ -170,16 +170,14 @@ class SysView {
     sdl::Texture tex(*ren_, *surf.get());
     tex.ApplyFull(10, 10);
 
-    std::string pow = FixedWidthInt(pow_, 7);
     std::stringstream ss4;
-    ss4 << "Power: " << pow;
+    ss4 << "Power: " << std::scientific << pow_;
     auto surf4 = font_.RenderBlended(ss4.str().c_str(), font_color_);
     sdl::Texture tex4(*ren_, *surf4.get());
     tex4.ApplyFull(10, 30);
 
-    std::string nn = FixedWidthInt(nneutrons_, 7);
     std::stringstream ss2;
-    ss2 << "Neutrons: " << nn;
+    ss2 << "Neutrons: " << std::scientific << (double)nneutrons_;
     auto surf2 = font_.RenderBlended(ss2.str().c_str(), font_color_);
     sdl::Texture tex2(*ren_, *surf2.get());
     tex2.ApplyFull(10, 50);

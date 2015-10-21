@@ -27,9 +27,8 @@ class Detector : public Object {
   virtual Detector* clone() { return new Detector(&(*this)); };
 
   virtual sdl::Surface* surface() {
-    std::string n_inside = draw::FixedWidthInt((int)curr_n_, 4);
     std::stringstream ss;
-    ss << n_inside;
+    ss << curr_n_;
 
     surf_->FillRect(NULL, sdl::Color::yellow(128));
 

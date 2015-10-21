@@ -29,7 +29,7 @@ class Moderator : public BasicMaterial {
     return p_scatter * mult;
   };
 
-  virtual void Tick(int deltat, System* sys, std::vector<Neutron*> neutrons) {
+  virtual void Tick(double deltat, System* sys, std::vector<Neutron*> neutrons) {
     num_neutrons_ = neutrons.size();
   }
 

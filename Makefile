@@ -13,7 +13,7 @@ includes += $(shell export PKG_CONFIG_PATH="$(HOME)/.local/lib/pkgconfig"; pkg-c
 includes += $(shell export PKG_CONFIG_PATH="$(HOME)/.local/lib/pkgconfig"; pkg-config --cflags SDL2_ttf)
 
 link_flags += $(LDFLAGS) -lSDL2 -lSDL2_ttf -std=c++11
-cpp_flags += $(CXXFLAGS) -O3 -std=c++11 -I. $(includes)
+cpp_flags += $(CXXFLAGS) -Wall -O3 -std=c++11 -I. $(includes)
 
 reactor : main.cc $(headers)
 	$(CXX) $< $(link_flags) $(cpp_flags) -o $@

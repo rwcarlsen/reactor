@@ -144,7 +144,7 @@ bool ProcessEvents(phys::System* sys) {
       if (dragged->isToolbar()) {
         continue;
       }
-      if (lctrl || rctrl) {
+      if ((lctrl || rctrl) && !sys->InToolbar(dragged)) {
         dragged->Resize(ev.motion.x, ev.motion.y, ev.motion.xrel, ev.motion.yrel);
       } else {
         dragged->Shift(ev.motion.xrel, ev.motion.yrel);

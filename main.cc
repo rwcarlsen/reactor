@@ -155,7 +155,7 @@ bool ProcessEvents(phys::System* sys) {
       } else if (ev.key.keysym.sym == SDLK_RCTRL) {
         rctrl = true; 
       } else {
-	phys::Object* shifted = sys->LastMoved();
+	phys::Object* shifted = sys->objects().back();
 	if (sys->InToolbar(shifted)) {
 	  continue;
 	}

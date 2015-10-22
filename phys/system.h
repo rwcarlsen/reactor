@@ -185,10 +185,6 @@ class System {
     }
   }
 
-  Object* LastMoved() {
-    return objs_.back(); 
-      };
-
   Object* ObjectFor(int x, int y) {
     for (int i = objs_.size() - 1; i >= 0; --i) {
       if (objs_[i]->Contains(x, y)) {

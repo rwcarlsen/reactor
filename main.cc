@@ -28,8 +28,17 @@ const int neutron_burst = 1000;
 // returns false if the quit signal bas been sent.
 bool ProcessEvents(phys::System* sys);
 
-int main(int argc, char** argv) {
 
+void AddToToolbar(draw::SysView* view, std::string label, phys::Object* o, sdl::Color c, int size) {
+  phys::Object::Rect r = {0, 0, size, size};
+  o->Init(*view->sys()->toolbar().PlaceItem(&r), c);
+  view->sys()->AddObject(o);
+  r.y += r.h - 0;
+  r.x += (size - 10 * label.size()) / 2;
+  view->AddLabel(label, r);
+}
+
+int main(int argc, char** argv) {
   try {
     sdl::SDLinit init(SDL_INIT_EVERYTHING);
 
@@ -39,49 +48,33 @@ int main(int argc, char** argv) {
     win.Center();
     win.Show();
     sdl::Renderer ren(win, SDL_RENDERER_ACCELERATED);
-
     phys::System sys(w, h);
-    phys::Toolbar toolbar = sys.toolbar();
+    draw::SysView view(&sys, &ren);
 
+    phys::Toolbar toolbar = sys.toolbar();
     phys::Object::Rect r;
 
     // add materials to system toolbar
     phys::Fuel fuel(0, 0.070, 2);
-    r = {0, 0, 40, 40};
-    fuel.Init(*toolbar.PlaceItem(&r), sdl::Color::purple());
-    sys.AddObject(&fuel);
-
-    phys::BasicMaterial reflector{0, 0, .1, 1, 0};
-    r = {0, 0, 80, 80};
-    reflector.Init(*toolbar.PlaceItem(&r), sdl::Color::white());
-    sys.AddObject(&reflector);
-
-    phys::Absorber absorber{.1};
-    r = {0, 0, 80, 80};
-    absorber.Init(*toolbar.PlaceItem(&r), sdl::Color::blue());
-    sys.AddObject(&absorber);
-
-    phys::BasicMaterial moderator{0, 0, .03, .3, 0};
-    r = {0, 0, 80, 80};
-    moderator.Init(*toolbar.PlaceItem(&r), sdl::Color::green());
-    sys.AddObject(&moderator);
-
-    phys::Detector detector;
-    r = {0, 0, 100, 100};
-    detector.Init(*toolbar.PlaceItem(&r), sdl::Color::yellow(128));
-    sys.AddObject(&detector);
-
-    phys::Moderator voidmoderator(.03, .3, 200);
-    r = {0, 0, 60, 60};
-    voidmoderator.Init(*toolbar.PlaceItem(&r), sdl::Color::lime());
-    sys.AddObject(&voidmoderator);
+    AddToToolbar(&view, "Fuel", &fuel, sdl::Color::purple(), 40);
 
     phys::StreamSource stream;
-    r = {0, 0, 40, 40};
-    stream.Init(*toolbar.PlaceItem(&r), sdl::Color::olive());
-    sys.AddObject(&stream);
+    AddToToolbar(&view, "Source", &stream, sdl::Color::olive(), 40);
 
-    draw::SysView view(&sys, &ren);
+    phys::BasicMaterial reflector{0, 0, .1, 1, 0};
+    AddToToolbar(&view, "Scatterer", &reflector, sdl::Color::white(), 80);
+
+    phys::Absorber absorber{.1};
+    AddToToolbar(&view, "Absorber", &absorber, sdl::Color::blue(), 80);
+
+    phys::BasicMaterial moderator{0, 0, .03, .3, 0};
+    AddToToolbar(&view, "Moderator", &moderator, sdl::Color::green(), 80);
+
+    phys::Moderator voidmoderator(.03, .3, 200);
+    AddToToolbar(&view, "Var-Moderator", &voidmoderator, sdl::Color::lime(), 80);
+
+    phys::Detector detector;
+    AddToToolbar(&view, "Detector", &detector, sdl::Color::yellow(128), 80);
 
     // start up the main loop
     sdl::Timer timer;

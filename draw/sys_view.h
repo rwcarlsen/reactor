@@ -67,7 +67,7 @@ void LoadFont(sdl::Font* font) {
 
 class SysView {
  public:
-  SysView(const phys::System* sys, sdl::Renderer* ren)
+  SysView(phys::System* sys, sdl::Renderer* ren)
       : pow_(0),
         nneutrons_(0),
         period_(0),
@@ -90,9 +90,18 @@ class SysView {
     DrawNeutrons();
     DrawDetectors();
     DrawInfo(fps);
+    DrawToolbarLabels();
 
     ren_->Render();
   };
+
+  void AddLabel(std::string text, phys::Object::Rect pos, sdl::Color c = sdl::Color::black()) {
+    labels_color_.push_back(c);
+    labels_.push_back(text);
+    labels_pos_.push_back(pos);
+  };
+
+  phys::System* sys() {return sys_;};
 
  private:
   void DrawMaterials() {
@@ -189,18 +198,29 @@ class SysView {
     tex3.ApplyFull(10, 70);
   }
 
+  void DrawToolbarLabels() {
+    for (int i = 0; i < labels_.size(); i++) {
+      auto surf = font_.RenderBlended(labels_[i].c_str(), labels_color_[i]);
+      sdl::Texture tex(*ren_, *surf.get());
+      tex.ApplyFull(labels_pos_[i].x, labels_pos_[i].y);
+    }
+  };
+
   double cumdt_;
   double pow_;
   int nneutrons_;
   double period_;
   int fps_;
+  std::vector<phys::Object::Rect> labels_pos_;
+  std::vector<std::string> labels_;
+  std::vector<sdl::Color> labels_color_;
 
   sdl::Color bg_color_;
   sdl::Color fast_neut_color_;
   sdl::Color slow_neut_color_;
   sdl::Color font_color_;
 
-  const phys::System* sys_;
+  phys::System* sys_;
   sdl::Renderer* ren_;
   sdl::Font font_;
 };

@@ -144,7 +144,7 @@ bool ProcessEvents(phys::System* sys) {
       if (dragged->isToolbar()) {
         continue;
       }
-      if (lctrl || rctrl) {
+      if ((lctrl || rctrl) && !sys->InToolbar(dragged)) {
         dragged->Resize(ev.motion.x, ev.motion.y, ev.motion.xrel, ev.motion.yrel);
       } else {
         dragged->Shift(ev.motion.xrel, ev.motion.yrel);
@@ -154,15 +154,19 @@ bool ProcessEvents(phys::System* sys) {
         lctrl = true; 
       } else if (ev.key.keysym.sym == SDLK_RCTRL) {
         rctrl = true; 
-      } else if (dragged != nullptr) {
+      } else {
+	phys::Object* shifted = sys->objects().back();
+	if (sys->InToolbar(shifted)) {
+	  continue;
+	}
         if (ev.key.keysym.sym == SDLK_DOWN) {
-          dragged->Shift(0, 5);
+          shifted->Shift(0, 5);
         } else if (ev.key.keysym.sym == SDLK_UP) {
-          dragged->Shift(0, -5);
+          shifted->Shift(0, -5);
         } else if (ev.key.keysym.sym == SDLK_LEFT) {
-          dragged->Shift(-5, 0);
+          shifted->Shift(-5, 0);
         } else if (ev.key.keysym.sym == SDLK_RIGHT) {
-          dragged->Shift(5, 0);
+          shifted->Shift(5, 0);
         }
       }
     } else if (ev.type == SDL_KEYUP) {

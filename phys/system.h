@@ -129,7 +129,7 @@ class System {
       }
 
       Rxn rxn = SelectRxn(n, obj, deltat);
-      if (!obj->React(rxn, n->x(), n->y())) {
+      if (!obj->React(this, rxn, n->x(), n->y())) {
         n->Move(deltat);
         ++i;
         continue;

@@ -32,7 +32,7 @@ class Fuel : public Object {
     return scat_prob_;
   };
 
-  virtual bool React(Rxn rx, double x, double y) {
+  virtual bool React(System* sys, Rxn rx, double x, double y) {
     int fuel_per_px = 500;
     if (rx != RxFission) {
       return true;
@@ -50,7 +50,7 @@ class Fuel : public Object {
       voids_[p] = 0;
     }
 
-    voids_[p]++;
+    voids_[p] += sys->neutron_weight();
     if (voids_[p] > fuel_per_px) {
       SDL_Point pt = {(int)relx, (int)rely};
       surf_->DrawPoint(pt, sdl::Color::gray());

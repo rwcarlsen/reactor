@@ -89,7 +89,7 @@ class Object {
     return 0;
   };
 
-  virtual bool React(Rxn rx, double x, double y) {return true;};
+  virtual bool React(System* sys, Rxn rx, double x, double y) {return true;};
 
   virtual Neutron::V scat_v(Neutron::V v, double speed) {
     return v;

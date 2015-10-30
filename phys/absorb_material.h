@@ -23,7 +23,7 @@ class Absorber : public Object {
     return Neutron::kMinSpeed / speed * p_absorb;
   };
 
-  virtual bool React(Rxn rx, double x, double y) {
+  virtual bool React(System* sys, Rxn rx, double x, double y) {
     int fuel_per_px = 25;
     if (rx != RxAbsorb) {
       return true;
@@ -41,7 +41,7 @@ class Absorber : public Object {
       voids_[p] = 0;
     }
 
-    voids_[p]++;
+    voids_[p] += sys->neutron_weight();
     if (voids_[p] > fuel_per_px) {
       SDL_Point pt = {(int)relx, (int)rely};
       surf_->DrawPoint(pt, sdl::Color::gray());

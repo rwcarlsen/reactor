@@ -73,9 +73,9 @@ class System {
   }
 
   void Tick(double deltat) {
-    // roulette off neutrons if we have too many
     double dtmax = 0.03;
     if (deltat > 1.1*dtmax) {
+      // roulette off neutrons if we have too many
       double pkill = (deltat - dtmax) / deltat;
       int nkill = 0;
       int i = 0;
@@ -92,6 +92,7 @@ class System {
 
       neutron_weight_ *= (double)(neutrons_.size() + nkill) / (double)neutrons_.size();
     } else if (deltat < 0.9*dtmax && neutron_weight_ > 1) {
+      // duplicate (unroulette) neutrons
       double pdup = (dtmax - deltat) / dtmax;
       int norig = neutrons_.size();
       for (int i = 0; i < norig; i++) {

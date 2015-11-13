@@ -2,6 +2,11 @@
 Reactor Game
 =============
 
+![Alt text](/screenshot1.png?raw=true "Screenshot")
+
+Installation
+-------------
+
 To install:
 
 Install dependencies:

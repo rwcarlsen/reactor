@@ -74,7 +74,7 @@ class System {
 
   void Tick(double deltat) {
     double dtmax = 0.03;
-    if (deltat > 1.1*dtmax) {
+    if (neutrons_.size() > 0 && deltat > 1.1*dtmax) {
       // roulette off neutrons if we have too many
       double pkill = (deltat - dtmax) / deltat;
       int nkill = 0;

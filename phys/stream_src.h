@@ -57,12 +57,12 @@ class StreamSource : public Object {
         x = (int)(r.x + 0.5 * (r.w - beamw) + frac * beamw);
         y = r.y;
         break;
-        
+
       case S:
         x = (int)(r.x + 0.5 * (r.w - beamw) + frac * beamw);
         y = r.y + r.h;
         break;
-        
+
       case E:
         x = r.x + r.w;
         y = (int)(r.y + 0.5 * (r.h - beamh) + frac * beamh);
@@ -75,7 +75,7 @@ class StreamSource : public Object {
     }
     return std::make_pair(x, y);
   }
-  
+
   std::pair<int, int> Speed(Dir d) {
     int nom = phys::Neutron::kNomSpeed;
     int vx, vy;
@@ -84,17 +84,17 @@ class StreamSource : public Object {
         vx = 0;
         vy = -nom;
         break;
-        
+
       case S:
         vx = 0;
         vy = nom;
         break;
-        
+
       case E:
         vx = nom;
         vy = 0;
         break;
-        
+
       case W:
         vx = -nom;
         vy = 0;
@@ -102,15 +102,15 @@ class StreamSource : public Object {
     }
     return std::make_pair(vx, vy);
   }
-  
+
   virtual void Tick(double deltat, System* sys, std::vector<Neutron*> neutrons) {
     int n = (int) kNPS * deltat;
     std::set<Dir>::iterator it;
     for (it = streaming_.begin(); it != streaming_.end(); ++it) {
       phys::Neutron::Pop ns;
-      std::pair<int, int> speed = Speed(*it);
+      auto speed = Speed(*it);
       for (int i = 0; i < n; ++i) {
-        std::pair<int, int> coords = Coords(*it, i, n);
+        auto coords = Coords(*it, i, n);
         ns.push_back(phys::Neutron(coords.first, coords.second,
                                    speed.first, speed.second));
       }

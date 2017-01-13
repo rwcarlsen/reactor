@@ -41,7 +41,7 @@ class Fuel : public Object {
     Rect r = rect();
     double relx = x - r.x;
     double rely = y - r.y;
-    std::pair<int, int> p = std::make_pair((int)(relx), (int)(rely));
+    auto p = std::make_pair((int)(relx), (int)(rely));
     if (voids_[p] > fuel_per_px) {
       return false;
     }

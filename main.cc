@@ -144,9 +144,9 @@ bool ProcessEvents(phys::System* sys) {
       }
     } else if (ev.type == SDL_KEYDOWN) {
       if (ev.key.keysym.sym == SDLK_LCTRL) {
-        lctrl = true; 
+        lctrl = true;
       } else if (ev.key.keysym.sym == SDLK_RCTRL) {
-        rctrl = true; 
+        rctrl = true;
       } else {
 	phys::Object* shifted = sys->objects().back();
 	if (sys->InToolbar(shifted)) {
@@ -164,9 +164,9 @@ bool ProcessEvents(phys::System* sys) {
       }
     } else if (ev.type == SDL_KEYUP) {
       if (ev.key.keysym.sym == SDLK_LCTRL) {
-        lctrl = false; 
+        lctrl = false;
       } else if (ev.key.keysym.sym == SDLK_RCTRL) {
-        rctrl = false; 
+        rctrl = false;
       }
     }
   }

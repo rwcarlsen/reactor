@@ -54,14 +54,14 @@ class System {
 
   void RemoveObject(Object *o)
   {
-    std::vector<Object*>::iterator it;
-    for(unsigned int i=0; i < objs_.size(); i++)
-      {
-	if ( objs_[i] == o )
-	  {
-	    it = objs_.erase(objs_.begin()+i);
-	  }
+    unsigned int i = 0;
+    while (i < objs_.size()) {
+      if ( objs_[i] == o ) {
+        objs_.erase(objs_.begin()+i);
+      } else {
+        i++;
       }
+    }
   };
 
   void AddNeutrons(Neutron::Pop ns) {

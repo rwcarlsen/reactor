@@ -24,8 +24,8 @@ class System {
       height_(h),
       neutron_weight_(1),
       prevpow_(0),
-      normal1_(Neutron::kNomSpeed, Neutron::kNomSpeed / 8.0),
-      blank_(Object::Rect {0, 0, 1, 1}) {
+      blank_(Object::Rect {0, 0, 1, 1}),
+      normal1_(Neutron::kNomSpeed, Neutron::kNomSpeed / 8.0) {
     //fraction of window width for toolbar
     int tb_w = 130;
     toolbar_.Init(Object::Rect {width_ - tb_w,0,tb_w,height_}, sdl::Color::gray());
@@ -261,17 +261,17 @@ class System {
     return v;
   };
 
+  int width_;
+  int height_;
+  double neutron_weight_;
+  double prevpow_;
+  double cumdt_;
+  double period_;
+
   std::vector<Object*> objs_;
   Object blank_;
   Toolbar toolbar_;
   Neutron::Pop neutrons_;
-  double prevpow_;
-  double cumdt_;
-  double period_;
-  double neutron_weight_;
-
-  int width_;
-  int height_;
 
   std::minstd_rand rand_gen_;
   std::uniform_real_distribution<> uniform01_;

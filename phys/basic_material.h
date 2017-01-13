@@ -12,12 +12,12 @@ namespace phys {
 class BasicMaterial : public Object {
  public:
   BasicMaterial(double pa, double pf, double ps, double sf, double y)
-    : uniform_(0, 2 * kPi),
-      p_absorb(pa),
+    : p_absorb(pa),
       p_fiss(pf),
       p_scatter(ps),
       scat_frac(sf),
-      yield(y) { };
+      yield(y),
+      uniform_(0, 2 * kPi) { };
 
   BasicMaterial(const BasicMaterial* f) : Object(f) {
     p_absorb = f->p_absorb;

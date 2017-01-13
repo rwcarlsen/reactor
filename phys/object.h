@@ -17,8 +17,8 @@ class Object {
  public:
   typedef SDL_Rect Rect;
 
- Object() : surf_(nullptr), detector_(false), isToolbar_(false) { };
-  
+ Object() : detector_(false), isToolbar_(false), surf_(nullptr) { };
+
  Object(Rect bounds, sdl::Color c = sdl::Color::white()) : detector_(false), isToolbar_(false) {
     Init(bounds, c);
   };

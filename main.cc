@@ -52,7 +52,6 @@ int main(int argc, char** argv) {
     draw::SysView view(&sys, &ren);
 
     phys::Toolbar toolbar = sys.toolbar();
-    phys::Object::Rect r;
 
     // add materials to system toolbar
     phys::Fuel fuel(0, 0.070, 2);

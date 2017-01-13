@@ -71,8 +71,8 @@ class SysView {
       : pow_(0),
         nneutrons_(0),
         period_(0),
-        fps_(0),
         cumdt_(0),
+        fps_(0),
         sys_(sys),
         ren_(ren) {
     LoadFont(&font_);
@@ -206,11 +206,12 @@ class SysView {
     }
   };
 
-  double cumdt_;
   double pow_;
   int nneutrons_;
   double period_;
+  double cumdt_;
   int fps_;
+
   std::vector<phys::Object::Rect> labels_pos_;
   std::vector<std::string> labels_;
   std::vector<sdl::Color> labels_color_;
